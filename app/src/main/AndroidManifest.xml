@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.umaradkhamov.signup">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/zeroq_circle"
+        android:label="ZeroQ"
+        android:roundIcon="@mipmap/zeroq_circle"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".IPContainer"
+            android:label="Log in" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="Sign Up"
+            android:parentActivityName=".SelectApplication" />
+
+        <activity android:name=".SplashScreen"
+                  android:theme="@style/AppTheme.SelectApplication">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LogInCustomer"
+            android:label="Login">
+        </activity>
+        <activity
+            android:name=".SignUpCustomer"
+            android:label="Sign Up" />
+        <activity
+            android:name=".SelectApplication"
+            android:parentActivityName=".LogInCustomer"
+            android:theme="@style/AppTheme.SelectApplication"></activity>
+        <activity
+            android:name=".ApplicationDescription"
+            android:label="Application Description"
+            android:parentActivityName=".SelectApplication"></activity>
+        <activity
+            android:name=".Fields"
+            android:label="Apply"
+            android:parentActivityName=".ApplicationDescription"></activity>
+        <activity
+            android:name=".Appointment"
+            android:label="Appointment"
+            android:parentActivityName=".Fields"></activity>
+        <activity
+            android:name=".SeeYou"
+            android:label="Appointment Details"
+            android:parentActivityName=".Appointment"></activity>
+
+    </application>
+
+</manifest>

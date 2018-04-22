@@ -1,0 +1,30 @@
+.service-builder {
+	margin-top: 70px;
+}
+
+.form-builder {
+	margin-top: 40px;
+}
+
+hr {
+	margin-top: 0;
+	border: none;
+	height: 10px;
+	background-color: #3f4144;
+	opacity: 0.2;
+}
+
+textarea {
+	resize: none;
+}
+
+.add-btn 
+{
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+#fields-container 
+{
+	margin-bottom: 40px;
+}

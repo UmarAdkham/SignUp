@@ -1,0 +1,143 @@
+/* Start Navhar Style */
+.navbar-form{
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+#navigation .navbar{
+  background-color: rgba(0,0,0,0.8);
+}
+.navbar-fixed-top {
+    border:none;
+}
+.navbar-brand {
+  height: initial;
+}
+.navbar-toggle{
+  background-color: transparent;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.navbar-inverse .navbar-toggle {
+    border-color: white;
+}
+.icon-bar{
+  background-color: #c8c8c8;
+}
+
+#login-username, #login-password{
+  background-color: transparent;
+  color: #c8c8c8;
+  border-color: #c8c8c8;
+}
+#login-username:focus, #login-password:focus,#login-username:hover, #login-password:hover{
+  color: white;
+  border-color: white;
+  box-shadow: none;
+}
+#login-btn{
+  color: #4cae4c;
+  border-color: #4cae4c;
+  background-color: transparent;
+}
+
+#login-btn:hover{
+  color: #5fd85f;
+  border-color: #5fd85f;
+}
+
+
+
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none;
+}
+
+/* Start Footer Style */
+#footer{
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background-color: black;
+}
+.footer-logo{
+  width: 100%;
+}
+#copyright{
+  color:rgb(200,200,200);
+}
+
+/* Start Login Style */
+#login-section{
+  margin-top: 80px;
+}
+
+.social-section, .form-section{
+  margin-bottom: 50px;
+}
+.person-img{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.nav-pills>li:first-child>a {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.nav-pills>li:last-child>a {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 0px;
+
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.nav-pills > li {
+  width:50%;
+}
+.nav-pills > li + li {
+  margin-left: 0px;
+}
+.nav-pills>li>a {
+  border: 1px solid #ccc;
+  border-bottom:none;
+  color: #ccc;
+}
+.nav>li>a:focus, .nav>li>a:hover {
+  background: none;
+  border-color: #aaa;
+  color: #aaa;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:focus,
+.nav-pills > li.active > a:hover{
+  color: #000;
+  background-color: white;
+  border-color: #333;
+}
+.form-content{
+  border: 1px solid #333;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 20px;
+  margin-bottom: 60px;
+}
+.form-control{
+  box-shadow: none;
+}
+.form-control:focus {
+    border-color: #333;
+    box-shadow: none;
+}
+.form-horizontal .form-group {
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+}
+.btn-reset, .btn-submit
+{  
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+

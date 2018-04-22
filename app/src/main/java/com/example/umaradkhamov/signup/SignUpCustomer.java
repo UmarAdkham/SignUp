@@ -76,7 +76,7 @@ public class SignUpCustomer extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                String date = month + "/" + day + "/" + year;
+                String date = day + "/" + month + "/" + year;
                 dob.setText(date);
 
 

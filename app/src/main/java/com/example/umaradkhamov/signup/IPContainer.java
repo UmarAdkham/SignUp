@@ -20,7 +20,7 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 public class IPContainer extends AppCompatActivity {
-    static String IP = "10.100.193.66";
+    static String IP = "192.168.0.141";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

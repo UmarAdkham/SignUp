@@ -18,10 +18,6 @@
         <activity
             android:name=".IPContainer"
             android:label="Log in" />
-        <activity
-            android:name=".Main2Activity"
-            android:label="Sign Up"
-            android:parentActivityName=".SelectApplication" />
 
         <activity android:name=".SplashScreen"
                   android:theme="@style/AppTheme.SelectApplication">

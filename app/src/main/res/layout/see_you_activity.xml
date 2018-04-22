@@ -125,15 +125,15 @@
         android:layout_marginRight="17dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="18dp"
-        android:text="Company Registration Certificate Copy"
+        android:text="Company Registration Certificate copy"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintHorizontal_bias="0.366"
         app:layout_constraintLeft_toRightOf="@+id/textView19"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView16"
-        tools:layout_editor_absoluteY="204dp"
-        tools:layout_editor_absoluteX="329dp" />
+        tools:layout_editor_absoluteX="329dp"
+        tools:layout_editor_absoluteY="204dp" />
 
     <TextView
         android:id="@+id/textView16"
@@ -234,7 +234,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="268dp"
+        android:layout_marginTop="278dp"
         android:text="Follow the  Route"
         android:textSize="18sp"
         android:textStyle="bold"

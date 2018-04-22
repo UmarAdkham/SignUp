@@ -42,7 +42,7 @@ public class ApplicationDescription extends AppCompatActivity {
 
         //Setting intent strings into text views
         header.setText(serviceName);
-        body.setText(description);
+        //body.setText(description);
 
     }
 

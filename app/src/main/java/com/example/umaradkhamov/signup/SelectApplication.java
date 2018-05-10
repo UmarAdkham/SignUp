@@ -263,6 +263,7 @@ public class SelectApplication extends AppCompatActivity {
                     HashMap<String,String> map =(HashMap<String,String>)lv.getItemAtPosition(position);
                     intent_serviceID = map.get("serviceID");
                     intent_serviceName = map.get("serviceName");
+                    map.get("description").replaceAll("\\n","\n");
                     intent_description = map.get("description");
                     //Toast.makeText(getApplicationContext(), selectedBank, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SelectApplication.this, ApplicationDescription.class);

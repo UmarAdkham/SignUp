@@ -3,6 +3,7 @@ package com.example.umaradkhamov.signup;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,8 +20,12 @@ public class ApplicationDescription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.application_description);
 
+        serviceName = SelectApplication.intent_serviceName;
+        description = SelectApplication.intent_description;
+
+
         header = (TextView) findViewById(R.id.header);
-        body = (TextView) findViewById(R.id.body);
+        body = (TextView) findViewById(R.id.description);
         applyBtn = (Button) findViewById(R.id.applyBtn);
 
         //linking button to the next page
@@ -36,13 +41,14 @@ public class ApplicationDescription extends AppCompatActivity {
         });
 
         //Getting intents
-        serviceName = getIntent().getStringExtra("intent_serviceName");
+        /*serviceName = getIntent().getStringExtra("intent_serviceName");
         serviceID = getIntent().getStringExtra("intent_serviceID");
         description = getIntent().getStringExtra("intent_description");
+        description = description.replaceAll("\r","<br />");*/
 
         //Setting intent strings into text views
         header.setText(serviceName);
-        //body.setText(description);
+        body.setText(description);
 
     }
 

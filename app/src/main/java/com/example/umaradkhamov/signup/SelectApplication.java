@@ -40,6 +40,7 @@ public class SelectApplication extends AppCompatActivity {
     //private final String IP =  "192.168.0.141";
     private ListView lv;
     static String intent_serviceID, intent_description, intent_serviceName;
+    private String password, username;
     private ListAdapter adapter;
     ArrayList<HashMap<String, String>> applicationList;
 
@@ -53,6 +54,9 @@ public class SelectApplication extends AppCompatActivity {
         setContentView(R.layout.activity_select_application);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         initNavigationDrawer();
+
+        password = getIntent().getStringExtra("intent_psw");
+        username = getIntent().getStringExtra("intent_username");
 
 
         applicationList = new ArrayList<>();
@@ -150,21 +154,9 @@ public class SelectApplication extends AppCompatActivity {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
                 conn.setConnectTimeout(15000);
-                //conn.setRequestMethod("POST");
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
-
-                /*OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                //writer.write(getPostDataString(postDataParams));
-
-                writer.write("routeID=" + route_name);
-                //writer.write("");
-                writer.flush();
-                writer.close();
-                os.close();*/
 
                 int responseCode = conn.getResponseCode();
 
@@ -270,6 +262,8 @@ public class SelectApplication extends AppCompatActivity {
                     intent.putExtra("intent_serviceID", intent_serviceID);
                     intent.putExtra("intent_serviceName", intent_serviceName);
                     intent.putExtra("intent_description", intent_description);
+                    intent.putExtra("intent_psw", password);
+                    intent.putExtra("intent_username", username);
                     startActivity(intent);
                 }
             });

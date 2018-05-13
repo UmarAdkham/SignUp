@@ -4,26 +4,44 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class Fields extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "Fields";
-    private String serviceName, serviceID;
+    private String firstname, lastname, address, dob, passport, password, username, serviceName, serviceID;
     private TextView fields_header, dobTV;
-    private EditText firstname, lastname, passprtNo, email, address;
+    private EditText firstnameET, lastnameET, passprtNo, email, addressET;
     private Button submitForm, dobBtn;
+    StringBuffer sb;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
@@ -33,15 +51,14 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
         setContentView(R.layout.fields_activity);
 
         fields_header = (TextView) findViewById(R.id.fields_header);
-        firstname = (EditText) findViewById(R.id.firstname);
-        lastname = (EditText) findViewById(R.id.lastname);
+        firstnameET = (EditText) findViewById(R.id.firstname);
+        lastnameET = (EditText) findViewById(R.id.lastname);
         passprtNo = (EditText) findViewById(R.id.passportNo);
         email = (EditText) findViewById(R.id.email);
         dobBtn = (Button) findViewById(R.id.dobBtn);
         dobTV = (TextView) findViewById(R.id.dobTV);
-        address = (EditText) findViewById(R.id.adress);
+        addressET = (EditText) findViewById(R.id.adress);
         submitForm = (Button) findViewById(R.id.submitForm);
-
 
         dobBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,10 +93,11 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
         //Getting intents
         serviceName = getIntent().getStringExtra("intent_serviceName");
         serviceID = getIntent().getStringExtra("intent_serviceID");
+        password = getIntent().getStringExtra("intent_psw");
+        username = getIntent().getStringExtra("intent_username");
 
         //Setting intent strings into text views
         fields_header.setText(serviceName);
-
 
         //hard coded onclick method for button
         submitForm.setOnClickListener(new View.OnClickListener() {
@@ -93,42 +111,131 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
 
             }
         });
+
+        new AutoFill().execute();
+
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
     }
+
+    public class AutoFill extends AsyncTask<String, Void, Void> {
+
+        protected void onPreExecute() {
+
+        }
+        protected Void doInBackground(String... arg0) {
+
+
+            try {
+                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/autofill.php"); // here is your URL path
+
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+
+                writer.write("name=" + username + "&psw=" + password);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                    BufferedReader in = new BufferedReader(new
+                            InputStreamReader(
+                            conn.getInputStream()));
+
+                    sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null) {
+
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    //return sb.toString();
+                    String answer = sb.toString();
+
+                    Log.e(TAG, "Response from url: " + answer);
+
+                    if (answer != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(answer);
+
+                            // Getting JSON Array node
+                            JSONArray contacts = jsonObj.getJSONArray("autofill");
+
+                            // looping through All Contacts
+                            for (int i = 0; i < contacts.length(); i++) {
+                                JSONObject c = contacts.getJSONObject(i);
+                                firstname = c.getString("firstname");
+                                lastname = c.getString("lastname");
+                                address = c.getString("address");
+                                dob = c.getString("dob");
+                                passport = c.getString("passport");
+                                Toast.makeText(getApplicationContext(),
+                                        firstname,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        } catch (final JSONException e) {
+                            Log.e(TAG, "Json parsing error: " + e.getMessage());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Json parsing error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                        }
+
+                    } else {
+                        Log.e(TAG, "Couldn't get json from server.");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),
+                                        "Couldn't get json from server. Check LogCat for possible errors!",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                } else {
+                    // return new String("false : "+responseCode);
+                }
+            } catch (Exception e) {
+                //Check it. If I comment it out --> crash
+               /* Toast.makeText(getApplicationContext(),
+                        "Cannot connect to php file",
+                        Toast.LENGTH_LONG).show();*/
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            firstnameET.setText(firstname);
+            lastnameET.setText(lastname);
+            addressET.setText(address);
+            dobTV.setText(dob);
+            passprtNo.setText(passport);
+        }
+    }
 }
 
 
-
-  /* dobBtn.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View dob_builder_view) {
-                AlertDialog.Builder dob_builder = new AlertDialog.Builder(Fields.this);
-                dob_builder_view = getLayoutInflater().inflate(R.layout.dob_builder_dialog,null);
-                dob_builder.setView(dob_builder_view);
-                dob_builder.setMessage(getResources().getString(R.string.update_time) +" " + time_value +"?")
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                newTimePT = dob_builder_view.findViewById(R.id.timeForUpd);
-                                newTime = newTimePT.getHour() + ":" + newTimePT.getMinute() + ":00";
-                                new UpdateTime().execute();
-                                Intent intent = new Intent(TimesOfStation.this, TimesOfStation.class);
-                                finish();
-                                startActivity(intent);
-
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                dob_builder.create().show();
-
-            }
-        });*/

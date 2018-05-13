@@ -124,6 +124,8 @@ public class LogInCustomer extends AppCompatActivity {
             if(sb.toString().equals("true")){
                 //Going to the next page
                 Intent intent = new Intent(LogInCustomer.this, SelectApplication.class);
+                intent.putExtra("intent_psw", password);
+                intent.putExtra("intent_username", username);
                 startActivity(intent);
                 finish();
             }else{

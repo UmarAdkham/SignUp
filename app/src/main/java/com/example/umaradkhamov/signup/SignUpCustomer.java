@@ -94,7 +94,12 @@ public class SignUpCustomer extends AppCompatActivity {
                 address = addressET.getText().toString();
                 passportNo = passportNoET.getText().toString();
                 dobString = dob.getText().toString();
-                new SignUpCustomer.registerCustomer().execute();
+                if(username.isEmpty() || firstname.isEmpty() || lastname.isEmpty() ||
+                   password.isEmpty() || address.isEmpty() || passportNo.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Please, fill out all the fields", Toast.LENGTH_SHORT).show();
+                }else {
+                    new SignUpCustomer.registerCustomer().execute();
+                }
             }
         });
         //End of on click method
@@ -166,15 +171,15 @@ public class SignUpCustomer extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Username already exists", Toast.LENGTH_SHORT).show();
             }else if(sb.toString().equals("false")){
                 Toast.makeText(getApplicationContext(), "Failed to sign up", Toast.LENGTH_SHORT).show();
-            }else if(sb.toString().equals("empty")){
-                Toast.makeText(getApplicationContext(), "Please, fill out the fields", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            }else if(sb.toString().equals("true")){
                 Toast.makeText(getApplicationContext(), "Registered successfully",
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(SignUpCustomer.this, LogInCustomer.class);
                 startActivity(intent);
                 finish();
+            }else{
+                Toast.makeText(getApplicationContext(), "Sorry, we are having prooblems to sign you in. Try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }

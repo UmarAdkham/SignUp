@@ -13,12 +13,15 @@ public class ApplicationDescription extends AppCompatActivity {
 
     private TextView header, body;
     private Button applyBtn;
-    private String serviceName, description, serviceID;
+    private String serviceName, description, serviceID, password, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.application_description);
+
+        password = getIntent().getStringExtra("intent_psw");
+        username = getIntent().getStringExtra("intent_username");
 
         serviceName = SelectApplication.intent_serviceName;
         description = SelectApplication.intent_description;
@@ -36,6 +39,8 @@ public class ApplicationDescription extends AppCompatActivity {
                 intent.putExtra("intent_serviceID", serviceID);
                 intent.putExtra("intent_serviceName", serviceName);
                 intent.putExtra("intent_description", description);
+                intent.putExtra("intent_psw", password);
+                intent.putExtra("intent_username", username);
                 startActivity(intent);
             }
         });

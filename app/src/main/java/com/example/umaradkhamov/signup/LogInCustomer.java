@@ -123,7 +123,7 @@ public class LogInCustomer extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if(sb.toString().equals("true")){
                 //Going to the next page
-                Intent intent = new Intent(LogInCustomer.this, SelectApplication.class);
+                Intent intent = new Intent(LogInCustomer.this, BankSelect.class);
                 intent.putExtra("intent_psw", password);
                 intent.putExtra("intent_username", username);
                 startActivity(intent);

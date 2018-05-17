@@ -18,42 +18,46 @@
         <activity
             android:name=".IPContainer"
             android:label="Log in" />
-
-        <activity android:name=".SplashScreen"
-                  android:theme="@style/AppTheme.SelectApplication">
+        <activity
+            android:name=".SplashScreen"
+            android:theme="@style/AppTheme.SelectApplication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".LogInCustomer"
-            android:label="Login">
-        </activity>
+            android:label="Login"></activity>
+
+        <activity android:name=".BankSelect"
+            android:label="Select Bank"
+            android:theme="@style/AppTheme.SelectApplication"></activity>
+
         <activity
             android:name=".SignUpCustomer"
             android:label="Sign Up" />
         <activity
             android:name=".SelectApplication"
             android:parentActivityName=".LogInCustomer"
-            android:theme="@style/AppTheme.SelectApplication"></activity>
+            android:theme="@style/AppTheme.SelectApplication" />
         <activity
             android:name=".ApplicationDescription"
             android:label="Application Description"
-            android:parentActivityName=".SelectApplication"></activity>
+            android:parentActivityName=".SelectApplication" />
         <activity
             android:name=".Fields"
             android:label="Apply"
-            android:parentActivityName=".ApplicationDescription"></activity>
+            android:parentActivityName=".ApplicationDescription" />
         <activity
             android:name=".Appointment"
             android:label="Appointment"
-            android:parentActivityName=".Fields"></activity>
+            android:parentActivityName=".Fields" />
         <activity
             android:name=".SeeYou"
             android:label="Appointment Details"
-            android:parentActivityName=".Appointment"></activity>
-
+            android:parentActivityName=".Appointment" />
     </application>
 
 </manifest>

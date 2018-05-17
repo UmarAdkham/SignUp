@@ -25,10 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,14 +33,13 @@ import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class SelectApplication extends AppCompatActivity {
+public class BankSelect extends AppCompatActivity {
 
     TextView tv;
-    private String TAG = SelectApplication.class.getSimpleName();
-    //private final String IP =  "192.168.0.141";
+    private String TAG = BankSelect.class.getSimpleName();
     private ListView lv;
-    static String intent_serviceID, intent_description, intent_serviceName;
-    private String password, username, bankID;
+    static String intent_bankID, intent_bankName;
+    private String password, username;
     private ListAdapter adapter;
     ArrayList<HashMap<String, String>> applicationList;
 
@@ -54,25 +50,27 @@ public class SelectApplication extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_application);
+        setContentView(R.layout.bank_select);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         initNavigationDrawer();
 
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
-        bankID = getIntent().getStringExtra("intent_bankID");
+
 
         applicationList = new ArrayList<>();
-        lv = (ListView) findViewById(R.id.lv);
-        tv = (TextView) findViewById(R.id.selectBank);
+        lv = (ListView) findViewById(R.id.lv_bank);
+        tv = (TextView) findViewById(R.id.selectBankID);
 
         //Setting text from string values for both english and russian languages
-       // tv.setText(getResources().getString(R.string.choose_station) + " " + route_name);
+        // tv.setText(getResources().getString(R.string.choose_station) + " " + route_name);
 
-        tv.setText("Select Application");
+        tv.setText("Select Bank");
 
-        new GetApplications().execute();
+        new BankSelect.GetBanks().execute();
     }
+
+
     public void initNavigationDrawer() {
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
@@ -87,22 +85,22 @@ public class SelectApplication extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.pending:
-                        Intent intent_fare = new Intent(SelectApplication.this, SeeYou.class);
+                        Intent intent_fare = new Intent(BankSelect.this, SeeYou.class);
                         startActivity(intent_fare);
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.approved:
-                        Intent intent_time = new Intent(SelectApplication.this, SeeYou.class);
+                        Intent intent_time = new Intent(BankSelect.this, SeeYou.class);
                         startActivity(intent_time);
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.logout:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SelectApplication.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BankSelect.this);
                         builder.setMessage("Are you sure you want to exit?")
                                 .setCancelable(true)
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        Intent intent = new Intent(SelectApplication.this, LogInCustomer.class);
+                                        Intent intent = new Intent(BankSelect.this, LogInCustomer.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -140,8 +138,7 @@ public class SelectApplication extends AppCompatActivity {
     }
 
 
-
-    private class GetApplications extends AsyncTask<Void, Void, Void> {
+    private class GetBanks extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -152,23 +149,14 @@ public class SelectApplication extends AppCompatActivity {
 
             try {
 
-                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/getApplications.php"); // here is your URL path
+                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/getBanks.php"); // here is your URL path
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
                 conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
+                conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
-
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-
-                writer.write("bankID=" + bankID);
-                writer.flush();
-                writer.close();
-                os.close();
 
                 int responseCode = conn.getResponseCode();
 
@@ -188,6 +176,7 @@ public class SelectApplication extends AppCompatActivity {
                     }
 
                     in.close();
+                    // return sb.toString();
                     String answer = sb.toString();
 
                     Log.e(TAG, "Response from url: " + answer);
@@ -202,17 +191,15 @@ public class SelectApplication extends AppCompatActivity {
                             // looping through All Contacts
                             for (int i = 0; i < contacts.length(); i++) {
                                 JSONObject c = contacts.getJSONObject(i);
-                                String serviceName = c.getString("serviceName");
-                                String description = c.getString("description");
-                                String serviceID = c.getString("serviceID");
+                                String bankID = c.getString("bankID");
+                                String bankName = c.getString("bankName");
 
                                 // tmp hash map for single contact
                                 HashMap<String, String> record = new HashMap<>();
 
                                 // adding each child node to HashMap key => value
-                                record.put("serviceName",  serviceName);
-                                record.put("description", description);
-                                record.put("serviceID", serviceID);
+                                record.put("bankID",  bankID);
+                                record.put("bankName", bankName);
 
                                 // adding contact to contact list
                                 applicationList.add(record);
@@ -255,24 +242,20 @@ public class SelectApplication extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            adapter = new SimpleAdapter(SelectApplication.this, applicationList,
-                    R.layout.application_list, new String[]{"serviceName"},
-                    new int[]{R.id.application});
+            adapter = new SimpleAdapter(BankSelect.this, applicationList,
+                    R.layout.bank_list, new String[]{"bankName"},
+                    new int[]{R.id.bank});
             lv.setAdapter(adapter);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
 
                     HashMap<String,String> map =(HashMap<String,String>)lv.getItemAtPosition(position);
-                    intent_serviceID = map.get("serviceID");
-                    intent_serviceName = map.get("serviceName");
-                    map.get("description").replaceAll("\\n","\n");
-                    intent_description = map.get("description");
-                    //Toast.makeText(getApplicationContext(), selectedBank, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SelectApplication.this, ApplicationDescription.class);
-                    intent.putExtra("intent_serviceID", intent_serviceID);
-                    intent.putExtra("intent_serviceName", intent_serviceName);
-                    intent.putExtra("intent_description", intent_description);
+                    intent_bankID = map.get("bankID");
+                    intent_bankName = map.get("bankName");
+                    Intent intent = new Intent(BankSelect.this, SelectApplication.class);
+                    intent.putExtra("intent_bankID", intent_bankID);
+                    intent.putExtra("intent_bankName", intent_bankName);
                     intent.putExtra("intent_psw", password);
                     intent.putExtra("intent_username", username);
                     startActivity(intent);
@@ -282,3 +265,4 @@ public class SelectApplication extends AppCompatActivity {
 
     }
 }
+

@@ -17,7 +17,7 @@ public class SeeYou extends AppCompatActivity {
         okAppBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Intent intent = new Intent(SeeYou.this, SelectApplication.class);
+                Intent intent = new Intent(SeeYou.this, BankSelect.class);
                 startActivity(intent);
             }
         });

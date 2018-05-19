@@ -25,6 +25,8 @@ public class ApplicationDescription extends AppCompatActivity {
 
         serviceName = SelectApplication.intent_serviceName;
         description = SelectApplication.intent_description;
+        serviceID = SelectApplication.intent_serviceID;
+
 
 
         header = (TextView) findViewById(R.id.header);
@@ -38,18 +40,12 @@ public class ApplicationDescription extends AppCompatActivity {
                 Intent intent = new Intent(ApplicationDescription.this, Fields.class);
                 intent.putExtra("intent_serviceID", serviceID);
                 intent.putExtra("intent_serviceName", serviceName);
-                intent.putExtra("intent_description", description);
+                //intent.putExtra("intent_description", description);
                 intent.putExtra("intent_psw", password);
                 intent.putExtra("intent_username", username);
                 startActivity(intent);
             }
         });
-
-        //Getting intents
-        /*serviceName = getIntent().getStringExtra("intent_serviceName");
-        serviceID = getIntent().getStringExtra("intent_serviceID");
-        description = getIntent().getStringExtra("intent_description");
-        description = description.replaceAll("\r","<br />");*/
 
         //Setting intent strings into text views
         header.setText(serviceName);

@@ -37,7 +37,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class Fields extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "Fields";
-    private String firstname, lastname, address, dob, passport, password, username, serviceName, serviceID;
+    //Customer data
+    private String firstname, lastname, address, dob, passport, password, username;
+    //Fields data
+    private String serviceName, serviceID, fieldName, fieldType;
     private TextView fields_header, dobTV;
     private EditText firstnameET, lastnameET, passprtNo, email, addressET;
     private Button submitForm, dobBtn;
@@ -96,23 +99,25 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
 
+        Toast.makeText(getApplicationContext(),serviceID,Toast.LENGTH_LONG).show();
+
+
         //Setting intent strings into text views
         fields_header.setText(serviceName);
+
+        new getFields().execute();
+        new AutoFill().execute();
 
         //hard coded onclick method for button
         submitForm.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),
-                        "Submitted successfully",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Submitted successfully",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Fields.this, Appointment.class);
                 startActivity(intent);
 
             }
         });
-
-        new AutoFill().execute();
 
     }
 
@@ -120,6 +125,118 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
     }
+
+    public class getFields extends AsyncTask<String, Void, Void> {
+
+        protected void onPreExecute() {
+
+        }
+        protected Void doInBackground(String... arg0) {
+
+
+            try {
+                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/getFields.php"); // here is your URL path
+
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+
+                writer.write("serviceID=" + serviceID);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                    BufferedReader in = new BufferedReader(new
+                            InputStreamReader(
+                            conn.getInputStream()));
+
+                    sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null) {
+
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    //return sb.toString();
+                    String answer = sb.toString();
+
+                    Log.e(TAG, "Service ID: " + serviceID);
+                    Log.e(TAG, "Response from url: " + answer);
+
+                    if (answer != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(answer);
+
+                            // Getting JSON Array node
+                            JSONArray contacts = jsonObj.getJSONArray("fields");
+
+                            // looping through All Contacts
+                            for (int i = 0; i < contacts.length(); i++) {
+                                JSONObject c = contacts.getJSONObject(i);
+                                fieldName = c.getString("fieldName");
+                                fieldType = c.getString("fieldType");
+                            }
+                        } catch (final JSONException e) {
+                            Log.e(TAG, "Json parsing error: " + e.getMessage());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Json parsing error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                        }
+
+                    } else {
+                        Log.e(TAG, "Couldn't get json from server.");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),
+                                        "Couldn't get json from server. Check LogCat for possible errors!",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                } else {
+                    // return new String("false : "+responseCode);
+                }
+            } catch (Exception e) {
+                //Check it. If I comment it out --> crash
+               /* Toast.makeText(getApplicationContext(),
+                        "Cannot connect to php file",
+                        Toast.LENGTH_LONG).show();*/
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            /*firstnameET.setText(firstname);
+            lastnameET.setText(lastname);
+            addressET.setText(address);
+            dobTV.setText(dob);
+            passprtNo.setText(passport);*/
+        }
+    }
+
 
     public class AutoFill extends AsyncTask<String, Void, Void> {
 

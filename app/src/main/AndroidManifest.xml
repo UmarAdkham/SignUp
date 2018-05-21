@@ -29,12 +29,11 @@
         </activity>
         <activity
             android:name=".LogInCustomer"
-            android:label="Login"></activity>
-
-        <activity android:name=".BankSelect"
+            android:label="Login" />
+        <activity
+            android:name=".BankSelect"
             android:label="Select Bank"
-            android:theme="@style/AppTheme.SelectApplication"></activity>
-
+            android:theme="@style/AppTheme.SelectApplication" />
         <activity
             android:name=".SignUpCustomer"
             android:label="Sign Up" />
@@ -58,6 +57,7 @@
             android:name=".SeeYou"
             android:label="Appointment Details"
             android:parentActivityName=".Appointment" />
+        <activity android:name=".ManualDesign"></activity>
     </application>
 
 </manifest>

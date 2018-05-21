@@ -1,21 +1,24 @@
 package com.example.umaradkhamov.signup;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,111 +30,197 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class Fields extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
-    private static final String TAG = "Fields";
-    //Customer data
-    private String firstname, lastname, address, dob, passport, password, username;
-    //Fields data
+public class ManualDesign extends AppCompatActivity {
+    private static final String TAG = "ManualDesign";
     private String serviceName, serviceID, fieldName, fieldType;
-    private TextView fields_header, dobTV;
-    private EditText firstnameET, lastnameET, passprtNo, email, addressET;
-    private Button submitForm, dobBtn;
+    private String firstname, lastname, address, dob, passport, password, username;
+    List<String> myList;
+    private int numOfFields;
     private StringBuffer sb;
-
+    private JSONArray fields;
+    private JSONObject c;
+    Map<String, String> map;
+    private Void autofill_result;
+    private RadioButton[] rb;
+    private RadioGroup rg;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+
+    @SuppressLint("ResourceType")
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fields_activity);
-
-        fields_header = (TextView) findViewById(R.id.fields_header);
-        firstnameET = (EditText) findViewById(R.id.firstname);
-        lastnameET = (EditText) findViewById(R.id.lastname);
-        passprtNo = (EditText) findViewById(R.id.passportNo);
-        email = (EditText) findViewById(R.id.email);
-        dobBtn = (Button) findViewById(R.id.dobBtn);
-        dobTV = (TextView) findViewById(R.id.dobTV);
-        addressET = (EditText) findViewById(R.id.adress);
-        submitForm = (Button) findViewById(R.id.submitForm);
-
-        dobBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialog = new DatePickerDialog(
-                        Fields.this,
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        mDateSetListener,
-                        year,month,day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
-        });
-
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-               // Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
-
-                String date = day + "/" + month + "/" + year;
-                dobTV.setText(date);
-            }
-        };
-
-
         //Getting intents
-        serviceName = getIntent().getStringExtra("intent_serviceName");
         serviceID = getIntent().getStringExtra("intent_serviceID");
         password = getIntent().getStringExtra("intent_psw");
+        serviceName = getIntent().getStringExtra("intent_serviceName");
         username = getIntent().getStringExtra("intent_username");
 
-        Toast.makeText(getApplicationContext(),serviceID,Toast.LENGTH_LONG).show();
+        //Execute autofill
+        try {
+            autofill_result = new AutoFill().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        map = new HashMap<>();
+        map.put("Firstname", firstname);
+        map.put("Lastname", lastname);
+        map.put("Address", address);
+        map.put("Passport No", passport);
 
+        //Execute getFields
+        try {
+            fields = new getFields().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
-        //Setting intent strings into text views
-        fields_header.setText(serviceName);
+        numOfFields = fields.length();
+        //Setting design programmatically
+        LinearLayout myLayout = new LinearLayout(this);
+        myLayout.setOrientation(LinearLayout.VERTICAL);
+        for (int i=1; i<= numOfFields; i++){
+            //get instance of JSON array
+            try {
+                c = fields.getJSONObject(i-1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //get fieldName of the instance
+            try {
+                fieldName = c.getString("fieldName");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-        new getFields().execute();
-        new AutoFill().execute();
+            EditText myET = new EditText(this);
+            myET.setId(i);
 
-        //hard coded onclick method for button
-        submitForm.setOnClickListener(new View.OnClickListener() {
+            //Autofill with data if fields are matched
+            if(map.containsKey(fieldName)) {
+                Log.e(TAG, fieldName + map.get(fieldName));
+                myET.setText(map.get(fieldName));
+            }//Make dob button
+            else if(fieldName.equalsIgnoreCase("Date of Birth")){
+                Button dobBtn = new Button(this);
+                dobBtn.setText("Date");
+                RelativeLayout.LayoutParams dobParams =
+                        new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                dobParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+               //buttonParams.addRule(RelativeLayout.BELOW, numOfFields+1);
+                dobBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
+                        int day = cal.get(Calendar.DAY_OF_MONTH);
 
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Submitted successfully",Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Fields.this, Appointment.class);
-                startActivity(intent);
+                        DatePickerDialog dialog = new DatePickerDialog(
+                                ManualDesign.this,
+                                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                                mDateSetListener,
+                                year,month,day);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+                    }
+                });
+
+                mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        month = month + 1;
+                        // Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+
+                        String date = day + "/" + month + "/" + year;
+                        //dobTV.setText(date);
+                    }
+                };
+
+                myLayout.addView(dobBtn, dobParams);
+
+            }else{
+                myET.setHint(fieldName);
+            }
+
+            myET.setWidth(800);
+            RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            if (i > 1){
+                int k = i-1;
+                etParam.addRule(RelativeLayout.BELOW, k);
 
             }
-        });
+            etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            etParam.setMargins(0,0,0,80);
+
+            myLayout.addView(myET, etParam);
+            setContentView(myLayout);
+        }
+
+        //Radio button try
+        rb = new RadioButton[5];
+        rg = new RadioGroup(this);
+        rg.setOrientation(RadioGroup.HORIZONTAL);
+        for(int i=0; i<5; i++){
+            rb[i]  = new RadioButton(this);
+            rg.addView(rb[i]); //the RadioButtons are added to the radioGroup instead of the layout
+            rb[i].setText("Test");
+        }
+        rg.setId(numOfFields+1);
+        RelativeLayout.LayoutParams radioParams =
+                new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+        radioParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        radioParams.addRule(RelativeLayout.BELOW, numOfFields);
+
+
+
+
+        //Button after fields
+        Button myButton = new Button(this);
+        myButton.setText("Submit");
+        RelativeLayout.LayoutParams buttonParams =
+                new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+        buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        buttonParams.addRule(RelativeLayout.BELOW, numOfFields+1);
+        //End of button
+        myLayout.addView(rg);
+        myLayout.addView(myButton, buttonParams);
+
 
     }
 
-    @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
-    }
-
-    public class getFields extends AsyncTask<String, Void, Void> {
+    public  class getFields extends AsyncTask<String, Void, JSONArray> {
 
         protected void onPreExecute() {
 
         }
-        protected Void doInBackground(String... arg0) {
+        protected JSONArray doInBackground(String... arg0) {
 
 
             try {
@@ -184,13 +273,16 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
 
                             // Getting JSON Array node
                             JSONArray contacts = jsonObj.getJSONArray("fields");
+                            int number = contacts.length();
+                            Log.e(TAG, "Length: " + number);
 
-                            // looping through All Contacts
-                            for (int i = 0; i < contacts.length(); i++) {
+                            return contacts;
+                            /*// looping through All Contacts
+                            for (int i = 0; i < numOfFields; i++) {
                                 JSONObject c = contacts.getJSONObject(i);
                                 fieldName = c.getString("fieldName");
                                 fieldType = c.getString("fieldType");
-                            }
+                            }*/
                         } catch (final JSONException e) {
                             Log.e(TAG, "Json parsing error: " + e.getMessage());
                             runOnUiThread(new Runnable() {
@@ -228,15 +320,10 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            /*firstnameET.setText(firstname);
-            lastnameET.setText(lastname);
-            addressET.setText(address);
-            dobTV.setText(dob);
-            passprtNo.setText(passport);*/
+        protected void onPostExecute(JSONArray result) {
+
         }
     }
-
 
     public class AutoFill extends AsyncTask<String, Void, Void> {
 
@@ -346,13 +433,7 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
 
         @Override
         protected void onPostExecute(Void result) {
-            firstnameET.setText(firstname);
-            lastnameET.setText(lastname);
-            addressET.setText(address);
-            dobTV.setText(dob);
-            passprtNo.setText(passport);
+
         }
     }
 }
-
-

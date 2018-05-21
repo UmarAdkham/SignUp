@@ -37,7 +37,7 @@ public class ApplicationDescription extends AppCompatActivity {
         applyBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Intent intent = new Intent(ApplicationDescription.this, Fields.class);
+                Intent intent = new Intent(ApplicationDescription.this, ManualDesign.class);
                 intent.putExtra("intent_serviceID", serviceID);
                 intent.putExtra("intent_serviceName", serviceName);
                 //intent.putExtra("intent_description", description);

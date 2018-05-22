@@ -3,6 +3,7 @@ package com.example.umaradkhamov.signup;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -19,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -55,7 +58,7 @@ public class ManualDesign extends AppCompatActivity {
     Map<String, String> map;
     private Void autofill_result;
     private RadioButton[] rb;
-    private RadioGroup rg;
+    private RadioGroup rgGender, rgEdu, rgMarital;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
 
@@ -95,9 +98,13 @@ public class ManualDesign extends AppCompatActivity {
         }
 
         numOfFields = fields.length();
+
         //Setting design programmatically
+        ScrollView scrl=new ScrollView(this);
         LinearLayout myLayout = new LinearLayout(this);
         myLayout.setOrientation(LinearLayout.VERTICAL);
+        scrl.addView(myLayout);
+
         for (int i=1; i<= numOfFields; i++){
             //get instance of JSON array
             try {
@@ -112,89 +119,152 @@ public class ManualDesign extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            EditText myET = new EditText(this);
-            myET.setId(i);
-
             //Autofill with data if fields are matched
             if(map.containsKey(fieldName)) {
-                Log.e(TAG, fieldName + map.get(fieldName));
+                Log.e(TAG, "Huhu" + fieldName + map.get(fieldName));
+                TextView tv=new TextView(this);
+                tv.setText(fieldName);
+
+                EditText myET = new EditText(this);
+                myET.setId(i);
                 myET.setText(map.get(fieldName));
+                myET.setWidth(800);
+                RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                if (i > 1){
+                    int k = i-1;
+                    etParam.addRule(RelativeLayout.BELOW, k);
+                }
+                etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                etParam.setMargins(0,0,0,80);
+
+                myLayout.addView(tv);
+                myLayout.addView(myET, etParam);
             }//Make dob button
             else if(fieldName.equalsIgnoreCase("Date of Birth")){
-                Button dobBtn = new Button(this);
-                dobBtn.setText("Date");
-                RelativeLayout.LayoutParams dobParams =
-                        new RelativeLayout.LayoutParams(
-                                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                RelativeLayout.LayoutParams.WRAP_CONTENT);
-                dobParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-               //buttonParams.addRule(RelativeLayout.BELOW, numOfFields+1);
-                dobBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Calendar cal = Calendar.getInstance();
-                        int year = cal.get(Calendar.YEAR);
-                        int month = cal.get(Calendar.MONTH);
-                        int day = cal.get(Calendar.DAY_OF_MONTH);
+                TextView tv=new TextView(this);
+                tv.setText(fieldName);
+                TextView dobTv=new TextView(this);
+                dobTv.setText(dob);
+                Log.e(TAG, "Date: " + dob);
 
-                        DatePickerDialog dialog = new DatePickerDialog(
-                                ManualDesign.this,
-                                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                                mDateSetListener,
-                                year,month,day);
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.show();
+
+                //myLayout.addView(dobBtn, dobParams);
+                myLayout.addView(tv);
+                myLayout.addView(dobTv);
+
+            }else if(fieldName.equalsIgnoreCase("Educational Level")){
+                TextView tv=new TextView(this);
+                tv.setText(fieldName);
+                //Radio button try
+                rb = new RadioButton[5];
+                rgEdu = new RadioGroup(this);
+                rgEdu.setOrientation(RadioGroup.HORIZONTAL);
+                for(int k=1; k<=4; k++){
+                    rb[k] = new RadioButton(this);
+                    rgEdu.addView(rb[k]); //the RadioButtons are added to the radioGroup instead of the layout
+                    if (k==1){
+                        int newID = k + 123;
+                        rb[k].setId(newID);
+                        rb[k].setText("Primary");
+                    }else if(k==2) {
+                        //to make the id different
+                        int newID = k + 123;
+                        rb[k].setId(newID);
+                        rb[k].setText("Secondary");
+                        rgEdu.check(rb[k].getId());
+                    }else if(k==3) {
+                        int newID = k + 123;
+                        rb[k].setId(newID);
+                        rb[k].setText("Degree");
+                    }else{
+                        int newID = k + 123;
+                        rb[k].setId(newID);
+                        rb[k].setText("Master");
                     }
-                });
+                }
+                LinearLayout.LayoutParams radioParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                myLayout.addView(tv);
+                myLayout.addView(rgEdu,radioParams);
+            }else if(fieldName.equalsIgnoreCase("Marital Status")){
+                TextView tv=new TextView(this);
+                tv.setText(fieldName);
+                //Radio button try
+                rb = new RadioButton[3];
+                rgMarital = new RadioGroup(this);
+                rgMarital.setOrientation(RadioGroup.HORIZONTAL);
+                for(int k=1; k<=2; k++){
+                    rb[k] = new RadioButton(this);
+                    rgMarital.addView(rb[k]); //the RadioButtons are added to the radioGroup instead of the layout
+                    if (k==1){
+                        int newID = k + 223;
+                        rb[k].setId(newID);
+                        rb[k].setText("Single");
+                        rgMarital.check(rb[k].getId());
 
-                mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        month = month + 1;
-                        // Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
-
-                        String date = day + "/" + month + "/" + year;
-                        //dobTV.setText(date);
+                    }else {
+                        int newID = k + 223;
+                        rb[k].setId(newID);
+                        rb[k].setText("Married");
                     }
-                };
-
-                myLayout.addView(dobBtn, dobParams);
-
+                }
+                LinearLayout.LayoutParams radioParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                myLayout.addView(tv);
+                myLayout.addView(rgMarital,radioParams);
+            }else if(fieldName.equalsIgnoreCase("Gender")){
+                TextView tv=new TextView(this);
+                tv.setText(fieldName);
+                //Radio button try
+                rb = new RadioButton[5];
+                rgGender = new RadioGroup(this);
+                rgGender.setOrientation(RadioGroup.HORIZONTAL);
+                for(int k=1; k<=2; k++){
+                    rb[k] = new RadioButton(this);
+                    rgGender.addView(rb[k]); //the RadioButtons are added to the radioGroup instead of the layout
+                    if (k==1){
+                        int newID = k + 113;
+                        rb[k].setId(newID);
+                        rb[k].setText("Male");
+                        rgGender.check(rb[k].getId());
+                    }else {
+                        int newID = k + 113;
+                        rb[k].setId(newID);
+                        rb[k].setText("Female");
+                    }
+                }
+                LinearLayout.LayoutParams radioParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                myLayout.addView(tv);
+                myLayout.addView(rgGender,radioParams);
             }else{
+                TextView tv=new TextView(this);
+                tv.setText(fieldName);
+                EditText myET = new EditText(this);
+                myET.setId(i);
                 myET.setHint(fieldName);
-            }
-
-            myET.setWidth(800);
-            RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            if (i > 1){
-                int k = i-1;
-                etParam.addRule(RelativeLayout.BELOW, k);
-
-            }
-            etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            etParam.setMargins(0,0,0,80);
-
-            myLayout.addView(myET, etParam);
-            setContentView(myLayout);
-        }
-
-        //Radio button try
-        rb = new RadioButton[5];
-        rg = new RadioGroup(this);
-        rg.setOrientation(RadioGroup.HORIZONTAL);
-        for(int i=0; i<5; i++){
-            rb[i]  = new RadioButton(this);
-            rg.addView(rb[i]); //the RadioButtons are added to the radioGroup instead of the layout
-            rb[i].setText("Test");
-        }
-        rg.setId(numOfFields+1);
-        RelativeLayout.LayoutParams radioParams =
-                new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                myET.setWidth(800);
+                RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
-        radioParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        radioParams.addRule(RelativeLayout.BELOW, numOfFields);
+                if (i > 1){
+                    int k = i-1;
+                    etParam.addRule(RelativeLayout.BELOW, k);
+                }
+                etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                etParam.setMargins(0,0,0,80);
+                myLayout.addView(tv);
+                myLayout.addView(myET, etParam);
+            }
+
+        }
+
 
 
 
@@ -208,11 +278,35 @@ public class ManualDesign extends AppCompatActivity {
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
         buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         buttonParams.addRule(RelativeLayout.BELOW, numOfFields+1);
+        myButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                if (rgGender != null) {
+                    int selectedId = rgGender.getCheckedRadioButtonId();
+                    // find the radiobutton by returned id
+                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                    Toast.makeText(ManualDesign.this,
+                            radioButton.getText(), Toast.LENGTH_SHORT).show();
+                }
+                if (rgEdu != null) {
+                    int selectedId = rgEdu.getCheckedRadioButtonId();
+                    // find the radiobutton by returned id
+                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                    Toast.makeText(ManualDesign.this,
+                            radioButton.getText(), Toast.LENGTH_SHORT).show();
+                }
+                if (rgMarital != null) {
+                    int selectedId = rgMarital.getCheckedRadioButtonId();
+                    // find the radiobutton by returned id
+                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                    Toast.makeText(ManualDesign.this,
+                            radioButton.getText(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         //End of button
-        myLayout.addView(rg);
         myLayout.addView(myButton, buttonParams);
-
-
+        setContentView(scrl);
     }
 
     public  class getFields extends AsyncTask<String, Void, JSONArray> {

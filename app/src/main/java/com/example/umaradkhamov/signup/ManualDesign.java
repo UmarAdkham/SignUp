@@ -24,6 +24,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +39,7 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -49,13 +52,13 @@ import javax.net.ssl.HttpsURLConnection;
 public class ManualDesign extends AppCompatActivity {
     private static final String TAG = "ManualDesign";
     private String serviceName, serviceID, fieldName, fieldType;
-    private String firstname, lastname, address, dob, passport, password, username;
-    List<String> myList;
+    private String firstname, lastname, address, dob, passport, password, username, email, gender, postcode, json;
     private int numOfFields;
     private StringBuffer sb;
     private JSONArray fields;
     private JSONObject c;
-    Map<String, String> map;
+    private Map<String, String> map;
+    ArrayList<String> fieldNames = new ArrayList<String>();
     private Void autofill_result;
     private RadioButton[] rb;
     private RadioGroup rgGender, rgEdu, rgMarital;
@@ -87,6 +90,8 @@ public class ManualDesign extends AppCompatActivity {
         map.put("Lastname", lastname);
         map.put("Address", address);
         map.put("Passport No", passport);
+        map.put("Postcode", postcode);
+        map.put("Email", email);
 
         //Execute getFields
         try {
@@ -98,13 +103,14 @@ public class ManualDesign extends AppCompatActivity {
         }
 
         numOfFields = fields.length();
+        //initialize json string
+        json = "[";
 
         //Setting design programmatically
         ScrollView scrl=new ScrollView(this);
         LinearLayout myLayout = new LinearLayout(this);
         myLayout.setOrientation(LinearLayout.VERTICAL);
         scrl.addView(myLayout);
-
         for (int i=1; i<= numOfFields; i++){
             //get instance of JSON array
             try {
@@ -115,45 +121,43 @@ public class ManualDesign extends AppCompatActivity {
             //get fieldName of the instance
             try {
                 fieldName = c.getString("fieldName");
+                fieldType = c.getString("fieldType");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             //Autofill with data if fields are matched
-            if(map.containsKey(fieldName)) {
-                Log.e(TAG, "Huhu" + fieldName + map.get(fieldName));
-                TextView tv=new TextView(this);
+            if(map.containsKey(fieldName) && fieldType.equalsIgnoreCase("EditText")) {
+                TextView tv = new TextView(this);
                 tv.setText(fieldName);
 
                 EditText myET = new EditText(this);
                 myET.setId(i);
                 myET.setText(map.get(fieldName));
+
                 myET.setWidth(800);
                 RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
-                if (i > 1){
-                    int k = i-1;
+                if (i > 1) {
+                    int k = i - 1;
                     etParam.addRule(RelativeLayout.BELOW, k);
                 }
                 etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                etParam.setMargins(0,0,0,80);
+                etParam.setMargins(0, 0, 0, 80);
 
                 myLayout.addView(tv);
                 myLayout.addView(myET, etParam);
-            }//Make dob button
-            else if(fieldName.equalsIgnoreCase("Date of Birth")){
-                TextView tv=new TextView(this);
-                tv.setText(fieldName);
-                TextView dobTv=new TextView(this);
-                dobTv.setText(dob);
-                Log.e(TAG, "Date: " + dob);
-
-
-                //myLayout.addView(dobBtn, dobParams);
-                myLayout.addView(tv);
-                myLayout.addView(dobTv);
-
-            }else if(fieldName.equalsIgnoreCase("Educational Level")){
+            } else if(fieldName.equalsIgnoreCase("Date of Birth")){
+                    TextView tv=new TextView(this);
+                    tv.setText(fieldName);
+                    TextView dobTv=new TextView(this);
+                    dobTv.setId(i);
+                    dobTv.setText(dob);
+                    //myLayout.addView(dobBtn, dobParams);
+                    myLayout.addView(tv);
+                    myLayout.addView(dobTv);
+            }
+            else if(fieldName.equalsIgnoreCase("Educational Level")){
                 TextView tv=new TextView(this);
                 tv.setText(fieldName);
                 //Radio button try
@@ -183,6 +187,7 @@ public class ManualDesign extends AppCompatActivity {
                         rb[k].setText("Master");
                     }
                 }
+
                 LinearLayout.LayoutParams radioParams =
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -215,6 +220,7 @@ public class ManualDesign extends AppCompatActivity {
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
+
                 myLayout.addView(tv);
                 myLayout.addView(rgMarital,radioParams);
             }else if(fieldName.equalsIgnoreCase("Gender")){
@@ -265,11 +271,7 @@ public class ManualDesign extends AppCompatActivity {
 
         }
 
-
-
-
-
-        //Button after fields
+        //Submit Button after fields
         Button myButton = new Button(this);
         myButton.setText("Submit");
         RelativeLayout.LayoutParams buttonParams =
@@ -281,32 +283,159 @@ public class ManualDesign extends AppCompatActivity {
         myButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                if (rgGender != null) {
-                    int selectedId = rgGender.getCheckedRadioButtonId();
-                    // find the radiobutton by returned id
-                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
-                    Toast.makeText(ManualDesign.this,
-                            radioButton.getText(), Toast.LENGTH_SHORT).show();
+
+                int a = 0;
+                for (int i=1; i<= numOfFields; i++){
+                    //get instance of JSON array
+                    try {
+                        c = fields.getJSONObject(i-1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //get fieldName of the instance
+                    try {
+                        fieldName = c.getString("fieldName");
+                        fieldType = c.getString("fieldType");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (a == 1) {
+                        json += ',';
+                    }
+
+                    //Autofill with data if fields are matched
+                    if(map.containsKey(fieldName) && fieldType.equalsIgnoreCase("EditText")) {
+                        EditText myET = (EditText) findViewById(i);
+                        json += "{\"Fieldname\":\"" +fieldName + "\",";
+                        json += "\"Value\":\"" + myET.getText().toString() + "\"}";
+
+                    } else if(fieldName.equalsIgnoreCase("Date of Birth")){
+                        TextView dobTv= (TextView) findViewById(i);
+                        json += "{\"Fieldname\":\"" +fieldName + "\",";
+                        json += "\"Value\":\"" + dobTv.getText().toString() + "\"}";
+                    }
+                    else if(fieldName.equalsIgnoreCase("Educational Level")){
+                        int selectedId = rgEdu.getCheckedRadioButtonId();
+                        // find the radiobutton by returned id
+                        RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                        String s = radioButton.getText().toString();
+                        json += "{\"Fieldname\":\"" +fieldName + "\",";
+                        json += "\"Value\":\"" + s + "\"}";
+                    }else if(fieldName.equalsIgnoreCase("Marital Status")){
+                        int selectedId = rgMarital.getCheckedRadioButtonId();
+                        // find the radiobutton by returned id
+                        RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                        String s = radioButton.getText().toString();
+                        json += "{\"Fieldname\":\"" +fieldName + "\",";
+                        json += "\"Value\":\"" + s + "\"}";
+                    }else if(fieldName.equalsIgnoreCase("Gender")){
+                        int selectedId = rgGender.getCheckedRadioButtonId();
+                        // find the radiobutton by returned id
+                        RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                        String s = radioButton.getText().toString();
+                        json += "{\"Fieldname\":\"" +fieldName + "\",";
+                        json += "\"Value\":\"" + s + "\"}";
+                    }else{
+                        EditText myET = (EditText) findViewById(i);
+                        String s = " ";
+                        if(!myET.getText().toString().isEmpty()){
+                            s = myET.getText().toString();
+                        }
+                        json += "{\"Fieldname\":\"" +fieldName + "\",";
+                        json += "\"Value\":\"" + s + "\"}";
+                    }
+
+                    a=1;
                 }
-                if (rgEdu != null) {
-                    int selectedId = rgEdu.getCheckedRadioButtonId();
-                    // find the radiobutton by returned id
-                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
-                    Toast.makeText(ManualDesign.this,
-                            radioButton.getText(), Toast.LENGTH_SHORT).show();
-                }
-                if (rgMarital != null) {
-                    int selectedId = rgMarital.getCheckedRadioButtonId();
-                    // find the radiobutton by returned id
-                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
-                    Toast.makeText(ManualDesign.this,
-                            radioButton.getText(), Toast.LENGTH_SHORT).show();
-                }
+
+                json += "]";
+                new ManualDesign.submitInfo().execute();
             }
         });
         //End of button
         myLayout.addView(myButton, buttonParams);
         setContentView(scrl);
+    }
+
+    public class submitInfo extends AsyncTask<String, Void, String> {
+
+        protected void onPreExecute() {
+        }
+
+        protected String doInBackground(String... arg0) {
+
+            try {
+
+                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/submitInfo.php"); // here is your URL path
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+
+
+
+                Log.e(TAG, "Array" + json);
+                Log.e(TAG, "serviceID" + serviceID);
+                Log.e(TAG, "customerID" + username);
+
+                writer.write("serviceID=" + serviceID + "&customerID=" + username + "&fieldNames=" + json);
+
+
+                writer.flush();
+                writer.close();
+                os.close();
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                    BufferedReader in = new BufferedReader(new
+                            InputStreamReader(
+                            conn.getInputStream()));
+
+                    sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null) {
+
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(sb.toString().contains("t")){
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+            }else if(sb.toString().contains("f")) {
+                Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Log.e(TAG, "Error" + sb.toString());
+
+            }
+
+
+        }
     }
 
     public  class getFields extends AsyncTask<String, Void, JSONArray> {
@@ -485,6 +614,9 @@ public class ManualDesign extends AppCompatActivity {
                                 address = c.getString("address");
                                 dob = c.getString("dob");
                                 passport = c.getString("passport");
+                                postcode = c.getString("postcode");
+                                email = c.getString("email");
+                                gender = c.getString("gender");
                                 Toast.makeText(getApplicationContext(),
                                         firstname,
                                         Toast.LENGTH_LONG).show();

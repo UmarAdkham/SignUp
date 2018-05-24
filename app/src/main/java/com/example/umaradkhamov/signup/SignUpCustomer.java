@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +32,12 @@ import javax.net.ssl.HttpsURLConnection;
 public class SignUpCustomer extends AppCompatActivity {
 
     private Button signUpBtn, dobSignUp;
-    private EditText usernameET, fNameET, lNameET, passwordET, addressET, passportNoET;
-    private String username, firstname, lastname, password, address, passportNo, dobString;
+    private EditText usernameET, fNameET, lNameET, passwordET, addressET, passportNoET, postcodeET, emailET;
+    private String username, firstname, lastname, password, address, passportNo, dobString, postcode, email;
+    private CharSequence gender;
     private TextView dob;
+    private RadioGroup rg;
+    private RadioButton rb;
     StringBuffer sb;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
@@ -48,6 +53,9 @@ public class SignUpCustomer extends AppCompatActivity {
         passwordET = (EditText) findViewById(R.id.CustPasswordET);
         addressET = (EditText) findViewById(R.id.address);
         passportNoET = (EditText) findViewById(R.id.myKad);
+        postcodeET = (EditText) findViewById(R.id.postcode);
+        emailET = (EditText) findViewById(R.id.email);
+        rg = (RadioGroup) findViewById(R.id.radioGender);
 
         //buying buttons
         signUpBtn = (Button) findViewById(R.id.CustRegisterBtn);
@@ -94,8 +102,15 @@ public class SignUpCustomer extends AppCompatActivity {
                 address = addressET.getText().toString();
                 passportNo = passportNoET.getText().toString();
                 dobString = dob.getText().toString();
+                postcode = postcodeET.getText().toString();
+                email = emailET.getText().toString();
+                int selectedId = rg.getCheckedRadioButtonId();
+                // find the radiobutton by returned id
+                rb = (RadioButton) findViewById(selectedId);
+                gender = rb.getText();
+                Toast.makeText(getApplicationContext(), "Radio" + gender + ": Postcode: " + postcode, Toast.LENGTH_SHORT).show();
                 if(username.isEmpty() || firstname.isEmpty() || lastname.isEmpty() ||
-                   password.isEmpty() || address.isEmpty() || passportNo.isEmpty()){
+                   password.isEmpty() || address.isEmpty() || passportNo.isEmpty() || postcode.isEmpty() || email.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Please, fill out all the fields", Toast.LENGTH_SHORT).show();
                 }else {
                     new SignUpCustomer.registerCustomer().execute();
@@ -131,7 +146,8 @@ public class SignUpCustomer extends AppCompatActivity {
                         new OutputStreamWriter(os, "UTF-8"));
 
                 writer.write("name=" + username + "&firstname=" + firstname + "&lastname=" + lastname + "&psw=" + password +
-                "&dob=" + dobString + "&address=" + address + "&passportNo=" + passportNo);
+                "&dob=" + dobString + "&address=" + address + "&passportNo=" + passportNo + "&postcode=" + postcode +
+                "&gender=" + gender + "&email=" + email);
                 writer.flush();
                 writer.close();
                 os.close();

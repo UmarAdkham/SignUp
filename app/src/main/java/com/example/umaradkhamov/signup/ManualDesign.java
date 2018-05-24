@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -52,7 +53,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class ManualDesign extends AppCompatActivity {
     private static final String TAG = "ManualDesign";
     private String serviceName, serviceID, fieldName, fieldType;
-    private String firstname, lastname, address, dob, passport, password, username, email, gender, postcode, json;
+    private String encryption_key, firstname, lastname, address, dob, passport, password, username, email, gender, postcode, json;
     private int numOfFields;
     private StringBuffer sb;
     private JSONArray fields;
@@ -380,14 +381,25 @@ public class ManualDesign extends AppCompatActivity {
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
 
-
-
                 Log.e(TAG, "Array" + json);
                 Log.e(TAG, "serviceID" + serviceID);
                 Log.e(TAG, "customerID" + username);
 
-                writer.write("serviceID=" + serviceID + "&customerID=" + username + "&fieldNames=" + json);
+                //Generate random encryption key
+                int leftLimit = 97; // letter 'a'
+                int rightLimit = 122; // letter 'z'
+                int targetStringLength = 10;
+                Random random = new Random();
+                StringBuilder buffer = new StringBuilder(targetStringLength);
+                for (int i = 0; i < targetStringLength; i++) {
+                    int randomLimitedInt = leftLimit + (int)
+                            (random.nextFloat() * (rightLimit - leftLimit + 1));
+                    buffer.append((char) randomLimitedInt);
+                }
+                encryption_key = buffer.toString();
 
+                writer.write("serviceID=" + serviceID + "&customerID=" + username + "&fieldNames=" + json +
+                "&key=" + encryption_key);
 
                 writer.flush();
                 writer.close();
@@ -426,15 +438,18 @@ public class ManualDesign extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if(sb.toString().contains("t")){
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                String qrcode = serviceID + "<>" + username + "<>" + encryption_key;
+                Log.e(TAG, "QRCode" + qrcode);
+                Intent intent = new Intent(ManualDesign.this, DetailsOfAppointment.class);
+                intent.putExtra("qrcode", qrcode);
+                startActivity(intent);
+
             }else if(sb.toString().contains("f")) {
-                Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sorry, something went wrong", Toast.LENGTH_SHORT).show();
             }
             else {
                 Log.e(TAG, "Error" + sb.toString());
-
             }
-
-
         }
     }
 

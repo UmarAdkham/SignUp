@@ -57,7 +57,8 @@
             android:name=".SeeYou"
             android:label="Appointment Details"
             android:parentActivityName=".Appointment" />
-        <activity android:name=".ManualDesign"></activity>
+        <activity android:name=".ManualDesign" />
+        <activity android:name=".DetailsOfAppointment"></activity>
     </application>
 
 </manifest>

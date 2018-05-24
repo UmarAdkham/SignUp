@@ -436,12 +436,15 @@ public class ManualDesign extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(sb.toString().contains("t")){
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                String qrcode = serviceID + "<>" + username + "<>" + encryption_key;
+            if(android.text.TextUtils.isDigitsOnly(sb.toString())){
+                String appointmentID = sb.toString();
+                String qrcode = appointmentID + "<>" + encryption_key;
                 Log.e(TAG, "QRCode" + qrcode);
+                Log.e(TAG, "appoitnmentID" + appointmentID);
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ManualDesign.this, DetailsOfAppointment.class);
                 intent.putExtra("qrcode", qrcode);
+                intent.putExtra("appointmentID", appointmentID);
                 startActivity(intent);
 
             }else if(sb.toString().contains("f")) {

@@ -96,10 +96,10 @@ public class Fields extends AppCompatActivity implements DatePickerDialog.OnDate
         //Getting intents
         serviceName = getIntent().getStringExtra("intent_serviceName");
         serviceID = getIntent().getStringExtra("intent_serviceID");
-        password = getIntent().getStringExtra("intent_psw");
+        password = BankSelect.password;
         username = getIntent().getStringExtra("intent_username");
 
-        Toast.makeText(getApplicationContext(),serviceID,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), password,Toast.LENGTH_LONG).show();
 
 
         //Setting intent strings into text views

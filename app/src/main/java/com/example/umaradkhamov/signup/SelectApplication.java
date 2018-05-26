@@ -274,6 +274,7 @@ public class SelectApplication extends AppCompatActivity {
                     intent.putExtra("intent_serviceName", intent_serviceName);
                     intent.putExtra("intent_description", intent_description);
                     intent.putExtra("intent_psw", password);
+                    intent.putExtra("bankID", bankID);
                     intent.putExtra("intent_username", username);
                     startActivity(intent);
                 }

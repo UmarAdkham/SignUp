@@ -52,7 +52,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class ManualDesign extends AppCompatActivity {
     private static final String TAG = "ManualDesign";
-    private String serviceName, serviceID, fieldName, fieldType;
+    //Strings to get
+    private String bankID, serviceName, serviceID, fieldName, fieldType;
     private String encryption_key, firstname, lastname, address, dob, passport, password, username, email, gender, postcode, json;
     private int numOfFields;
     private StringBuffer sb;
@@ -77,6 +78,7 @@ public class ManualDesign extends AppCompatActivity {
         password = getIntent().getStringExtra("intent_psw");
         serviceName = getIntent().getStringExtra("intent_serviceName");
         username = getIntent().getStringExtra("intent_username");
+        bankID = getIntent().getStringExtra("bankID");
 
         //Execute autofill
         try {
@@ -445,6 +447,11 @@ public class ManualDesign extends AppCompatActivity {
                 Intent intent = new Intent(ManualDesign.this, DetailsOfAppointment.class);
                 intent.putExtra("qrcode", qrcode);
                 intent.putExtra("appointmentID", appointmentID);
+                intent.putExtra("bankID", bankID);
+                intent.putExtra("serviceID", serviceID);
+                intent.putExtra("serviceName", serviceName);
+                intent.putExtra("intent_psw", password);
+                intent.putExtra("intent_username", username);
                 startActivity(intent);
 
             }else if(sb.toString().contains("f")) {

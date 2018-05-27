@@ -38,7 +38,7 @@ public class SignUpCustomer extends AppCompatActivity {
     private TextView dob;
     private RadioGroup rg;
     private RadioButton rb;
-    StringBuffer sb;
+    private StringBuffer sb;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     @Override

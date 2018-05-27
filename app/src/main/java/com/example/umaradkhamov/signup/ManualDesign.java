@@ -444,7 +444,7 @@ public class ManualDesign extends AppCompatActivity {
                 Log.e(TAG, "QRCode" + qrcode);
                 Log.e(TAG, "appoitnmentID" + appointmentID);
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ManualDesign.this, DetailsOfAppointment.class);
+                Intent intent = new Intent(ManualDesign.this, Appointment.class);
                 intent.putExtra("qrcode", qrcode);
                 intent.putExtra("appointmentID", appointmentID);
                 intent.putExtra("bankID", bankID);

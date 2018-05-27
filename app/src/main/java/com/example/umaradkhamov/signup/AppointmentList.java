@@ -193,6 +193,7 @@ public class AppointmentList extends AppCompatActivity {
                     intent.putExtra("bankName", bankName);
                     intent.putExtra("appointment_date", appointment_date);
                     intent.putExtra("time_interval", time_interval);
+                    intent.putExtra("intent_username", username);
                     startActivity(intent);
                 }
             });

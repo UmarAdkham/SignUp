@@ -46,19 +46,18 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
     private Button appDateBtn;
     private TextView appDateTV;
     Spinner spinnerFrom, spinnerTime;
-    List<String> categories, branchIDs, times;
+    List<String> categories, branchIDs, times, intervals;
     ArrayAdapter dataAdapter, timeAdapter;
 
     private ListView lv;
     private String TAG = Appointment.class.getSimpleName();
     //Intents
-    private String bankID, serviceID, serviceName, appointmentID, username, password;
-    private String branchID, date, time;
+    private String bankID, serviceID, serviceName, appointmentID, username, password, qrcode;
+    private String branchID, date, time, interval_id;
     private Button submitAppointment;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private Void getBranches;
-
-
+    private StringBuffer sb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +65,17 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
         setContentView(R.layout.appointment_activity);
 
         //Getting intents
-        password = getIntent().getStringExtra("intent_psw");
+
+        appointmentID = getIntent().getStringExtra("appointmentID");
+        qrcode = getIntent().getStringExtra("qrcode");
         serviceName = getIntent().getStringExtra("intent_serviceName");
         serviceID = getIntent().getStringExtra("serviceID");
-        username = getIntent().getStringExtra("intent_username");
         bankID = getIntent().getStringExtra("bankID");
-        appointmentID = getIntent().getStringExtra("appointmentID");
+        username = getIntent().getStringExtra("intent_username");
+        password = getIntent().getStringExtra("intent_psw");
 
 
-        Toast.makeText(this, bankID, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, appointmentID, Toast.LENGTH_SHORT).show();
 
         appDateBtn = (Button) findViewById(R.id.appDateBtn);
         appDateTV = (TextView) findViewById(R.id.appDateTV);
@@ -105,12 +106,15 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                 // Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
                 date = year + "-" + month + "-" + day ;
                 appDateTV.setText(date);
+                new GetTimesForBranch().execute();
+
             }
         };
 
         categories = new ArrayList<String>();
         branchIDs = new ArrayList<String>();
         times = new ArrayList<String>();
+        intervals = new ArrayList<String>();
 
         spinnerFrom = (Spinner) findViewById(R.id.branchSpinner);
         spinnerTime = (Spinner) findViewById(R.id.timeSpinner);
@@ -124,11 +128,10 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                 /*Intent intent = new Intent(Appointment.this, SeeYou.class);
                 startActivity(intent);*/
                 if (date == null){
-                    Toast.makeText(getApplicationContext(), "Please enter the date", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please select a date and time", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), appointmentID + " : " + branchID + " : " + serviceID + " : "
-                            + username + " : " + date + " : " + time, Toast.LENGTH_LONG).show();
+                    new MakeAppointment().execute();
                 }
 
             }
@@ -148,14 +151,18 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
 
         switch (parent.getId()){
             case R.id.branchSpinner:
-                int selectedID = parent.getSelectedItemPosition();
-                branchID = branchIDs.get(selectedID);
-                Toast.makeText(this, "Branch " + branchID, Toast.LENGTH_SHORT).show();
-                new GetTimesForBranch().execute();
+                int selectedBranchID = parent.getSelectedItemPosition();
+                branchID = branchIDs.get(selectedBranchID);
+                if(date != null) {
+                    Toast.makeText(this, "Date 1: " + date, Toast.LENGTH_SHORT).show();
+                    new GetTimesForBranch().execute();
+                }
                 break;
             case R.id.timeSpinner:
-                time = parent.getSelectedItem().toString();
-                //Toast.makeText(this, "Destination station: " + item2, Toast.LENGTH_SHORT).show();
+                int selectedTimeID = parent.getSelectedItemPosition();
+                //time = parent.getSelectedItem().toString();
+                interval_id = intervals.get(selectedTimeID);
+                Toast.makeText(this, "Interval:  " + interval_id, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -294,7 +301,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
 
             try {
 
-                URL url = new URL("http://" + IPContainer.IP + "/jrlu/getTimesForBranch.php"); // here is your URL path
+                URL url = new URL("http://" + IPContainer.IP + "/jrlu/getTimeIntervals.php"); // here is your URL path
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
@@ -308,7 +315,8 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
 
-                Log.e(TAG, "branchID: " + branchID);
+
+                Log.e(TAG, "date: " + date);
                 writer.write("branchID=" + branchID + "&date=" + date);
                 writer.write("");
                 writer.flush();
@@ -337,7 +345,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                             if (node.getNodeType() == Node.ELEMENT_NODE) {
                                 Element element2 = (Element) node;
                                 times.add(getValue("time_interval", element2));
-                                //branchIDs.add(getValue("branchID", element2));
+                                intervals.add(getValue("interval_id", element2));
                             }
                         }
 
@@ -385,5 +393,98 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
             spinnerTime.setAdapter(timeAdapter);
         }
     }
+
+    private class MakeAppointment extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Toast.makeText(IPContainer.this,"XML Data is downloading",Toast.LENGTH_LONG).show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... arg0) {
+
+            try {
+
+                URL url = new URL("http://" + IPContainer.IP + "/jrlu/makeAppointment.php"); // here is your URL path
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                //conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+
+
+                Log.e(TAG, "date: " + date + " appointmentID: " + appointmentID + " branchID: "
+                                + branchID + " interval: " + interval_id);
+                writer.write("appointmentID=" + appointmentID + "&branchID=" + branchID
+                        + "&appointment_date=" + date + "&interval_id=" + interval_id );
+                writer.write("");
+                writer.flush();
+                writer.close();
+                os.close();
+
+                int responseCode=conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                    BufferedReader in = new BufferedReader(new
+                            InputStreamReader(
+                            conn.getInputStream()));
+
+                    sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null) {
+
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    return sb.toString();
+
+                }
+                else {
+                    //return new String("false : "+responseCode);
+                }
+            }
+            catch(Exception e){
+                //return new String("Exception: " + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(sb.toString().equals("true")){
+                Toast.makeText(getApplicationContext(), "Appointment has been made", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Appointment.this, DetailsOfAppointment.class);
+                intent.putExtra("qrcode", qrcode);
+                intent.putExtra("appointmentID", appointmentID);
+                intent.putExtra("bankID", bankID);
+                intent.putExtra("serviceID", serviceID);
+                intent.putExtra("serviceName", serviceName);
+                intent.putExtra("intent_psw", password);
+                intent.putExtra("intent_username", username);
+                startActivity(intent);
+                finish();
+            }else if(sb.toString().equals("false")){
+                Toast.makeText(getApplicationContext(), "Could not create Appointment", Toast.LENGTH_SHORT).show();
+            }else{
+                Log.e(TAG, "error: " + sb.toString());
+                Toast.makeText(getApplicationContext(), "Sorry, something went wrong",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 }

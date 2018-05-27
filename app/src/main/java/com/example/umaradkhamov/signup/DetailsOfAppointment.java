@@ -58,9 +58,18 @@ public class DetailsOfAppointment extends AppCompatActivity {
                 e.printStackTrace();
             }
         }else{
-            SharedPreference2 sh = new SharedPreference2();
-            String s = sh.getValue(appointmentID, getApplicationContext());
-            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+            SharedPreference2 sharedPreference = new SharedPreference2();
+            String storedQRCode = sharedPreference.getValue(appointmentID, getApplicationContext());
+            Toast.makeText(getApplicationContext(), storedQRCode, Toast.LENGTH_SHORT).show();
+            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+            try {
+                BitMatrix bitMatrix = multiFormatWriter.encode(storedQRCode, BarcodeFormat.QR_CODE, 200, 200);
+                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                qrImage.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+                e.printStackTrace();
+            }
         }
 
         goHome.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +79,7 @@ public class DetailsOfAppointment extends AppCompatActivity {
                 intent.putExtra("intent_username", username);
                 intent.putExtra("intent_psw", password);
                 startActivity(intent);
+                finish();
             }
         });
     }

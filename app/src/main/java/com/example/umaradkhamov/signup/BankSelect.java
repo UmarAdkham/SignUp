@@ -38,8 +38,8 @@ public class BankSelect extends AppCompatActivity {
     TextView tv;
     private String TAG = BankSelect.class.getSimpleName();
     private ListView lv;
-    static String intent_bankID, intent_bankName, password;
-    private String username;
+    static String intent_bankID, intent_bankName;
+    private String username, password;
     private ListAdapter adapter;
     ArrayList<HashMap<String, String>> applicationList;
 
@@ -56,9 +56,8 @@ public class BankSelect extends AppCompatActivity {
 
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
-        Toast.makeText(getApplicationContext(),
-                username,
-                Toast.LENGTH_LONG).show();
+
+
 
 
         applicationList = new ArrayList<>();

@@ -108,7 +108,6 @@ public class SignUpCustomer extends AppCompatActivity {
                 // find the radiobutton by returned id
                 rb = (RadioButton) findViewById(selectedId);
                 gender = rb.getText();
-                Toast.makeText(getApplicationContext(), "Radio" + gender + ": Postcode: " + postcode, Toast.LENGTH_SHORT).show();
                 if(username.isEmpty() || firstname.isEmpty() || lastname.isEmpty() ||
                    password.isEmpty() || address.isEmpty() || passportNo.isEmpty() || postcode.isEmpty() || email.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Please, fill out all the fields", Toast.LENGTH_SHORT).show();

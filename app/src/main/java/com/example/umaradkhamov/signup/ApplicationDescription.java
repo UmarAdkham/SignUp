@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ApplicationDescription extends AppCompatActivity {
 
@@ -23,6 +24,7 @@ public class ApplicationDescription extends AppCompatActivity {
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
         bankID = getIntent().getStringExtra("bankID");
+
 
 
         serviceName = SelectApplication.intent_serviceName;

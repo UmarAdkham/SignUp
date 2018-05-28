@@ -62,6 +62,7 @@ public class SelectApplication extends AppCompatActivity {
         username = getIntent().getStringExtra("intent_username");
         bankID = getIntent().getStringExtra("intent_bankID");
 
+
         applicationList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.lv);
         tv = (TextView) findViewById(R.id.selectBank);

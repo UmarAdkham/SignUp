@@ -75,7 +75,6 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
         password = getIntent().getStringExtra("intent_psw");
 
 
-        Toast.makeText(this, appointmentID, Toast.LENGTH_SHORT).show();
 
         appDateBtn = (Button) findViewById(R.id.appDateBtn);
         appDateTV = (TextView) findViewById(R.id.appDateTV);

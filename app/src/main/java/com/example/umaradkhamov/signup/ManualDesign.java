@@ -92,7 +92,7 @@ public class ManualDesign extends AppCompatActivity {
         map.put("Firstname", firstname);
         map.put("Lastname", lastname);
         map.put("Address", address);
-        map.put("Passport No", passport);
+        map.put("MyKad No/Passport No", passport);
         map.put("Postcode", postcode);
         map.put("Email", email);
 

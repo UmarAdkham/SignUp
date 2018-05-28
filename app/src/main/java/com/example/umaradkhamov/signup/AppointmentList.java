@@ -51,6 +51,7 @@ public class AppointmentList extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.lv_appointment);
        // tv = (TextView) findViewById(R.id.selectedAppointment);
         username = getIntent().getStringExtra("intent_username");
+        password = getIntent().getStringExtra("intent_psw");
         new AppointmentList.GetAppointments().execute();
     }
 
@@ -187,13 +188,13 @@ public class AppointmentList extends AppCompatActivity {
                     String serviceName = map.get("serviceName");
                     String appointment_date = map.get("appointment_date");
                     String time_interval = map.get("time_interval");
-                    Toast.makeText(getApplicationContext(), appointmentID, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(AppointmentList.this, DetailsOfAppointment.class);
                     intent.putExtra("appointmentID", appointmentID);
                     intent.putExtra("bankName", bankName);
                     intent.putExtra("appointment_date", appointment_date);
                     intent.putExtra("time_interval", time_interval);
                     intent.putExtra("intent_username", username);
+                    intent.putExtra("intent_psw", password);
                     startActivity(intent);
                 }
             });

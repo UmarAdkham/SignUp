@@ -41,12 +41,12 @@ public class DetailsOfAppointment extends AppCompatActivity {
         username = getIntent().getStringExtra("intent_username");
         password = getIntent().getStringExtra("intent_psw");
 
+
         if (qrcode != null) {
             SharedPreference2 sharedPreference = new SharedPreference2();
 
             sharedPreference.save(appointmentID, getApplicationContext(), qrcode);
             String savedQR = sharedPreference.getValue(appointmentID, getApplicationContext());
-            Toast.makeText(getApplicationContext(), savedQR, Toast.LENGTH_LONG).show();
 
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
             try {
@@ -60,7 +60,6 @@ public class DetailsOfAppointment extends AppCompatActivity {
         }else{
             SharedPreference2 sharedPreference = new SharedPreference2();
             String storedQRCode = sharedPreference.getValue(appointmentID, getApplicationContext());
-            Toast.makeText(getApplicationContext(), storedQRCode, Toast.LENGTH_SHORT).show();
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
             try {
                 BitMatrix bitMatrix = multiFormatWriter.encode(storedQRCode, BarcodeFormat.QR_CODE, 200, 200);

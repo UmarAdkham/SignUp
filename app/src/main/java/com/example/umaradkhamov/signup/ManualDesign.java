@@ -5,13 +5,17 @@ import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -73,6 +77,7 @@ public class ManualDesign extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Submit your info");
         //Getting intents
         serviceID = getIntent().getStringExtra("intent_serviceID");
         password = getIntent().getStringExtra("intent_psw");
@@ -111,14 +116,27 @@ public class ManualDesign extends AppCompatActivity {
 
         //Setting design programmatically
         ScrollView scrl=new ScrollView(this);
+
+        //LinearLayout
         LinearLayout myLayout = new LinearLayout(this);
         myLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams llParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        myLayout.setLayoutParams(llParams);
         scrl.addView(myLayout);
+        //#LinearLayout
+
+        //TextView for serviceName
         TextView serviceNameTV = new TextView(this);
         serviceNameTV.setText(serviceName);
-        serviceNameTV.setTextSize(24);
-        serviceNameTV.setPadding(0, 0, 0, 20);
-        myLayout.addView(serviceNameTV);
+        LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        nameParams.topMargin = 30;
+        serviceNameTV.setTextSize(30);
+        serviceNameTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+        serviceNameTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        serviceNameTV.setTypeface(Typeface.DEFAULT_BOLD);
+        myLayout.addView(serviceNameTV, nameParams);
+        //#TextView for serviceName
+
         for (int i=1; i<= numOfFields; i++){
             //get instance of JSON array
             try {
@@ -136,38 +154,60 @@ public class ManualDesign extends AppCompatActivity {
 
             //Autofill with data if fields are matched
             if(map.containsKey(fieldName) && fieldType.equalsIgnoreCase("EditText")) {
+                //TextView
                 TextView tv = new TextView(this);
                 tv.setText(fieldName);
+                LinearLayout.LayoutParams etTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etTvParams.setMargins(90, 85, 0, 0);
+                tv.setTextSize(19);
+                tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                //#TextView
 
+                //EditText
                 EditText myET = new EditText(this);
                 myET.setId(i);
                 myET.setText(map.get(fieldName));
+                LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etParams.setMargins(90, 0, 90, 0);
+                //#EditText
 
-                myET.setWidth(800);
-                RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                if (i > 1) {
-                    int k = i - 1;
-                    etParam.addRule(RelativeLayout.BELOW, k);
-                }
-                etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                etParam.setMargins(0, 0, 0, 80);
-
-                myLayout.addView(tv);
-                myLayout.addView(myET, etParam);
-            } else if(fieldName.equalsIgnoreCase("Date of Birth")){
+                myLayout.addView(tv, etTvParams);
+                myLayout.addView(myET, etParams);
+            } //Display Date of Birth
+            else if(fieldName.equalsIgnoreCase("Date of Birth")){
+                    //TextView
                     TextView tv=new TextView(this);
                     tv.setText(fieldName);
+                    LinearLayout.LayoutParams dobTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    dobTvParams.setMargins(90, 85, 0, 0);
+                    tv.setTextSize(19);
+                    tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                    tv.setTypeface(Typeface.DEFAULT_BOLD);
+                    //#TextView
+
+                    //DOB Value
                     TextView dobTv=new TextView(this);
                     dobTv.setId(i);
                     dobTv.setText(dob);
+                    LinearLayout.LayoutParams dobValueTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    dobValueTvParams.setMargins(90, 0, 0, 0);
+                    dobTv.setTextSize(18);
+                    dobTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
                     //myLayout.addView(dobBtn, dobParams);
-                    myLayout.addView(tv);
-                    myLayout.addView(dobTv);
+                    myLayout.addView(tv, dobTvParams);
+                    myLayout.addView(dobTv, dobValueTvParams);
             }
             else if(fieldName.equalsIgnoreCase("Educational Level")){
+                //TextView
                 TextView tv=new TextView(this);
                 tv.setText(fieldName);
+                LinearLayout.LayoutParams etTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etTvParams.setMargins(90, 85, 0, 0);
+                tv.setTextSize(19);
+                tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                //#TextView
                 //Radio button try
                 rb = new RadioButton[5];
                 rgEdu = new RadioGroup(this);
@@ -200,11 +240,19 @@ public class ManualDesign extends AppCompatActivity {
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                myLayout.addView(tv);
+                myLayout.addView(tv, etTvParams);
                 myLayout.addView(rgEdu,radioParams);
             }else if(fieldName.equalsIgnoreCase("Marital Status")){
+                //TextView
                 TextView tv=new TextView(this);
                 tv.setText(fieldName);
+                LinearLayout.LayoutParams etTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etTvParams.setMargins(90, 85, 0, 0);
+                tv.setTextSize(19);
+                tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                //#TextView
+
                 //Radio button try
                 rb = new RadioButton[3];
                 rgMarital = new RadioGroup(this);
@@ -229,11 +277,19 @@ public class ManualDesign extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                myLayout.addView(tv);
+                myLayout.addView(tv, etTvParams);
                 myLayout.addView(rgMarital,radioParams);
             }else if(fieldName.equalsIgnoreCase("Gender")){
+                //TextView
                 TextView tv=new TextView(this);
                 tv.setText(fieldName);
+                LinearLayout.LayoutParams etTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etTvParams.setMargins(90, 85, 0, 0);
+                tv.setTextSize(19);
+                tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                //#TextView
+
                 //Radio button try
                 rb = new RadioButton[5];
                 rgGender = new RadioGroup(this);
@@ -256,25 +312,29 @@ public class ManualDesign extends AppCompatActivity {
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                myLayout.addView(tv);
+                myLayout.addView(tv, etTvParams);
                 myLayout.addView(rgGender,radioParams);
             }else{
+                //TextView
                 TextView tv=new TextView(this);
                 tv.setText(fieldName);
+                LinearLayout.LayoutParams etTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etTvParams.setMargins(90, 85, 0, 0);
+                tv.setTextSize(19);
+                tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                //#TextView
+
+                //EditText
                 EditText myET = new EditText(this);
                 myET.setId(i);
                 myET.setHint(fieldName);
-                myET.setWidth(800);
-                RelativeLayout.LayoutParams etParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                if (i > 1){
-                    int k = i-1;
-                    etParam.addRule(RelativeLayout.BELOW, k);
-                }
-                etParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                etParam.setMargins(0,0,0,80);
-                myLayout.addView(tv);
-                myLayout.addView(myET, etParam);
+                LinearLayout.LayoutParams etParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                etParams.setMargins(90, 0, 90, 0);
+                //#EditText
+
+                myLayout.addView(tv, etTvParams);
+                myLayout.addView(myET, etParams);
             }
 
         }
@@ -282,12 +342,13 @@ public class ManualDesign extends AppCompatActivity {
         //Submit Button after fields
         Button myButton = new Button(this);
         myButton.setText("Submit");
-        RelativeLayout.LayoutParams buttonParams =
-                new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-        buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        buttonParams.addRule(RelativeLayout.BELOW, numOfFields+1);
+        LinearLayout.LayoutParams buttonParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+        buttonParams.setMargins(90,90,90,90);
+        myButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+        myButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
         myButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -689,7 +750,15 @@ public class ManualDesign extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return true;
     }
 }

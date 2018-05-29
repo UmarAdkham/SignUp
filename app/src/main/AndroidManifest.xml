@@ -46,6 +46,10 @@
             android:name=".ApplicationDescription"
             android:label="Application Description"
             android:parentActivityName=".SelectApplication" />
+
+        <activity android:name=".ManualDesign"
+            android:parentActivityName=".ApplicationDescription">
+        </activity>
         <activity
             android:name=".Fields"
             android:label="Apply"
@@ -58,7 +62,7 @@
             android:name=".SeeYou"
             android:label="Appointment Details"
             android:parentActivityName=".Appointment" />
-        <activity android:name=".ManualDesign" />
+
         <activity android:name=".DetailsOfAppointment" />
         <activity android:name=".AppointmentList"></activity>
     </application>

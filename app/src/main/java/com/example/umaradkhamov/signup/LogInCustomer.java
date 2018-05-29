@@ -24,10 +24,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class LogInCustomer extends AppCompatActivity {
 
-    private Button loginBtn, signUpBtn;
+    private Button loginBtn;
     private EditText usernameET, passwordET;
     private String username, password;
-    private TextView warning;
+    private TextView warning, signUpBtn;
     StringBuffer sb;
 
     @Override
@@ -37,7 +37,7 @@ public class LogInCustomer extends AppCompatActivity {
 
 
         loginBtn = (Button) findViewById(R.id.CustLoginBtn);
-        signUpBtn = (Button) findViewById(R.id.CustSignUpBtn);
+        signUpBtn = (TextView) findViewById(R.id.CustSignUpBtn);
         usernameET = (EditText) findViewById(R.id.CustUnameET);
         passwordET = (EditText) findViewById(R.id.CustPswET);
         warning = (TextView) findViewById(R.id.CustWarning);

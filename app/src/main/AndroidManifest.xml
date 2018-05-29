@@ -20,7 +20,7 @@
             android:label="Log in" />
         <activity
             android:name=".SplashScreen"
-            android:theme="@style/AppTheme.SelectApplication">
+            android:theme="@style/AppTheme.RemoveActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,18 +29,19 @@
         </activity>
         <activity
             android:name=".LogInCustomer"
-            android:label="Login" />
+            android:label="Login"
+            android:theme="@style/AppTheme.RemoveActionBar" />
         <activity
             android:name=".BankSelect"
             android:label="Select Bank"
-            android:theme="@style/AppTheme.SelectApplication" />
+            android:theme="@style/AppTheme.RemoveActionBar" />
         <activity
             android:name=".SignUpCustomer"
-            android:label="Sign Up" />
+            android:label="Sign Up"
+            android:theme="@style/AppTheme.RemoveActionBar" />
         <activity
             android:name=".SelectApplication"
-            android:parentActivityName=".LogInCustomer"
-            android:theme="@style/AppTheme.SelectApplication" />
+            android:parentActivityName=".LogInCustomer" />
         <activity
             android:name=".ApplicationDescription"
             android:label="Application Description"

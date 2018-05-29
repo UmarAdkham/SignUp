@@ -101,18 +101,27 @@ public class SignUpCustomer extends AppCompatActivity {
                 password = passwordET.getText().toString();
                 address = addressET.getText().toString();
                 passportNo = passportNoET.getText().toString();
-                dobString = dob.getText().toString();
+                if (!dob.getText().toString().equalsIgnoreCase("dd/mm/yyyy")) {
+                    dobString = dob.getText().toString();
+                }
+                else{
+                    dobString = "";
+                }
                 postcode = postcodeET.getText().toString();
                 email = emailET.getText().toString();
                 int selectedId = rg.getCheckedRadioButtonId();
                 // find the radiobutton by returned id
                 rb = (RadioButton) findViewById(selectedId);
                 gender = rb.getText();
-                if(username.isEmpty() || firstname.isEmpty() || lastname.isEmpty() ||
-                   password.isEmpty() || address.isEmpty() || passportNo.isEmpty() || postcode.isEmpty() || email.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Please, fill out all the fields", Toast.LENGTH_SHORT).show();
-                }else {
-                    new SignUpCustomer.registerCustomer().execute();
+                if (!dobString.equalsIgnoreCase("")) {
+                    if (username.isEmpty() || firstname.isEmpty() || lastname.isEmpty() ||
+                            password.isEmpty() || address.isEmpty() || passportNo.isEmpty() || postcode.isEmpty() || email.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Please, fill out all the fields", Toast.LENGTH_SHORT).show();
+                    } else {
+                        new SignUpCustomer.registerCustomer().execute();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "Please, enter your date of birth", Toast.LENGTH_SHORT).show();
                 }
             }
         });

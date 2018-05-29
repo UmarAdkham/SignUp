@@ -40,10 +40,9 @@ public class SelectApplication extends AppCompatActivity {
 
     TextView tv;
     private String TAG = SelectApplication.class.getSimpleName();
-    //private final String IP =  "192.168.0.141";
     private ListView lv;
     static String intent_serviceID, intent_description, intent_serviceName;
-    private String password, username, bankID;
+    private String password, username, bankID, bankName;
     private ListAdapter adapter;
     ArrayList<HashMap<String, String>> applicationList;
 
@@ -55,91 +54,23 @@ public class SelectApplication extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_application);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initNavigationDrawer();
 
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
         bankID = getIntent().getStringExtra("intent_bankID");
-
+        bankName = getIntent().getStringExtra("intent_bankName");
 
         applicationList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.lv);
-        tv = (TextView) findViewById(R.id.selectBank);
+        tv = (TextView) findViewById(R.id.selectApplication);
 
         //Setting text from string values for both english and russian languages
        // tv.setText(getResources().getString(R.string.choose_station) + " " + route_name);
 
-        tv.setText("Select Application");
+        tv.setText("Select Application from" + bankName);
 
         new GetApplications().execute();
     }
-    public void initNavigationDrawer() {
-
-        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-                int id = menuItem.getItemId();
-
-                switch (id){
-                    case R.id.home:
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.pending:
-                        Intent intent_fare = new Intent(SelectApplication.this, SeeYou.class);
-                        startActivity(intent_fare);
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.approved:
-                        Intent intent_time = new Intent(SelectApplication.this, SeeYou.class);
-                        startActivity(intent_time);
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.logout:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SelectApplication.this);
-                        builder.setMessage("Are you sure you want to exit?")
-                                .setCancelable(true)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Intent intent = new Intent(SelectApplication.this, LogInCustomer.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                }
-                return true;
-            }
-        });
-        View header = navigationView.getHeaderView(0);
-        TextView tv_email = (TextView)header.findViewById(R.id.tv_email);
-        tv_email.setText("Rupini Chandran");
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close){
-
-            @Override
-            public void onDrawerClosed(View v){
-                super.onDrawerClosed(v);
-            }
-
-            @Override
-            public void onDrawerOpened(View v) {
-                super.onDrawerOpened(v);
-            }
-        };
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-    }
-
 
 
     private class GetApplications extends AsyncTask<Void, Void, Void> {

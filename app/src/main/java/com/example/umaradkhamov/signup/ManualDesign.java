@@ -114,6 +114,11 @@ public class ManualDesign extends AppCompatActivity {
         LinearLayout myLayout = new LinearLayout(this);
         myLayout.setOrientation(LinearLayout.VERTICAL);
         scrl.addView(myLayout);
+        TextView serviceNameTV = new TextView(this);
+        serviceNameTV.setText(serviceName);
+        serviceNameTV.setTextSize(24);
+        serviceNameTV.setPadding(0, 0, 0, 20);
+        myLayout.addView(serviceNameTV);
         for (int i=1; i<= numOfFields; i++){
             //get instance of JSON array
             try {

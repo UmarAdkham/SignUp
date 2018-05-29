@@ -6,221 +6,202 @@
     android:layout_height="wrap_content"
     tools:context=".SignUpCustomer">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         tools:context="com.example.umaradkhamov.signup.SignUpCustomer">
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_height="87dp"
+            android:layout_marginTop="34dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/zeroq" />
+
 
 
         <EditText
             android:id="@+id/CustUsernameET"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/CustFirstnameET"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="73dp"
-            android:layout_marginTop="97dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Username"
             android:inputType="textPersonName"
-            app:layout_constraintHorizontal_bias="0.828"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            />
 
         <EditText
             android:id="@+id/CustFirstnameET"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/CustUsernameET"
-            android:layout_alignStart="@+id/CustUsernameET"
-            android:layout_marginTop="28dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Firstname"
             android:inputType="textPersonName"
-            app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CustUsernameET" />
+            />
 
         <EditText
             android:id="@+id/CustLastnameET"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/CustFirstnameET"
-            android:layout_alignStart="@+id/CustPasswordET"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="28dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Lastname"
-            android:inputType="textPersonName"
-            app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CustFirstnameET" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/CustPasswordET"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/CustFirstnameET"
-            android:layout_below="@+id/CustLastnameET"
-            android:layout_marginTop="28dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPassword"
-            app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CustLastnameET" />
+            android:inputType="textPassword" />
 
-        <Button
-            android:id="@+id/dobSignUp"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/CustPasswordET"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="28dp"
-            android:text="Date of Birth"
-            app:layout_constraintHorizontal_bias="0.295"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CustPasswordET" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="42dp">
 
-        <Button
-            android:id="@+id/CustRegisterBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="Sign Up"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myKad"
-            app:layout_constraintVertical_bias="0.043" />
-
-        <TextView
-            android:id="@+id/dobTextSignUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="39dp"
-            android:text="01/01/2000"
-            android:textSize="18sp"
-            app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintLeft_toRightOf="@+id/dobSignUp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CustPasswordET" />
-
-        <RadioGroup
-            android:id="@+id/radioGender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.248"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView12">
-
-            <RadioButton
-                android:id="@+id/radioMale"
+            <Button
+                android:id="@+id/dobSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Male"
-                android:textSize="16sp" />
+                android:layout_marginLeft="45dp"
+                android:background="@color/colorPrimary"
+                android:text="Date of Birth"
+                android:textColor="@color/colorWhite"/>
 
-            <RadioButton
-                android:id="@+id/radioFemale"
+            <TextView
+                android:id="@+id/dobTextSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Female"
-                android:textSize="16sp" />
+                android:layout_marginLeft="10dp"
+                android:text="dd/mm/yyyy"
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp" />
 
-        </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="42dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="45dp"
+                android:text="Gender:"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/radioGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Male"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"
+                    android:textSize="16sp" />
+            </RadioGroup>
+        </LinearLayout>
 
 
         <EditText
             android:id="@+id/address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Address"
-            android:inputType="textPersonName"
-            app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGender" />
-
-        <EditText
-            android:id="@+id/myKad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="28dp"
-            android:ems="10"
-            android:hint="MyKad/Passport No"
-            android:inputType="textPersonName"
-            app:layout_constraintHorizontal_bias="0.47"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:text="Gender"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.232"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dobSignUp" />
+            android:inputType="textPersonName"/>
 
         <EditText
             android:id="@+id/postcode"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Postcode"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address" />
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/myKad"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="42dp"
+            android:ems="10"
+            android:hint="MyKad/Passport No"
+            android:inputType="textPersonName" />
+
 
         <EditText
             android:id="@+id/email"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="45dp"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginBottom="42dp"
             android:ems="10"
             android:hint="Email"
-            android:inputType="textEmailAddress"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.467"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postcode" />
+            android:inputType="textEmailAddress" />
+
+        <Button
+            android:id="@+id/CustRegisterBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="42dp"
+            android:background="@color/colorGreen"
+            android:textColor="@color/colorWhite"
+            android:text="Sign Up"
+             />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </ScrollView>

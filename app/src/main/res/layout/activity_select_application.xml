@@ -4,28 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     tools:context="com.example.umaradkhamov.signup.SelectApplication">
-
-    <TextView
-        android:id="@+id/selectApplication"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:background="#e1e7f2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorBlack"
-        />
 
     <ListView
         android:id="@+id/lv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/CustPswET"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/selectBank"
+        android:background="@color/colorWhite"
         android:headerDividersEnabled="false" />
 
 

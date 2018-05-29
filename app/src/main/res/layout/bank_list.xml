@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="13dp"
     android:paddingTop="13dp"
-    android:background="#fbfcf4"
+    android:background="@color/colorWhite"
     >
 
 
@@ -15,6 +15,7 @@
         android:layout_weight="0.5"
         android:layout_height="40dp"
         android:gravity="center"
+        android:background="@color/colorWhite"
         android:paddingBottom="2dip"
         android:paddingLeft="10dp"
         android:textColor="@color/colorBlack"

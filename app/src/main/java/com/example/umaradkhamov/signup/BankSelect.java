@@ -62,12 +62,12 @@ public class BankSelect extends AppCompatActivity {
 
         applicationList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.lv_bank);
-        tv = (TextView) findViewById(R.id.selectBankID);
+        //tv = (TextView) findViewById(R.id.selectBankID);
 
         //Setting text from string values for both english and russian languages
         // tv.setText(getResources().getString(R.string.choose_station) + " " + route_name);
 
-        tv.setText("Select Bank");
+        //tv.setText("Select Bank");
 
         new BankSelect.GetBanks().execute();
     }

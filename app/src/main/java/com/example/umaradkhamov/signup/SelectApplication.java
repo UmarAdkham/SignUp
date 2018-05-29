@@ -1,17 +1,12 @@
 package com.example.umaradkhamov.signup;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -21,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -43,6 +37,7 @@ public class SelectApplication extends AppCompatActivity {
     private ListView lv;
     static String intent_serviceID, intent_description, intent_serviceName;
     private String password, username, bankID, bankName;
+
     private ListAdapter adapter;
     ArrayList<HashMap<String, String>> applicationList;
 
@@ -54,20 +49,20 @@ public class SelectApplication extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_application);
-
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
         bankID = getIntent().getStringExtra("intent_bankID");
         bankName = getIntent().getStringExtra("intent_bankName");
+        setTitle(bankName + " services");
 
         applicationList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.lv);
-        tv = (TextView) findViewById(R.id.selectApplication);
+       // tv = (TextView) findViewById(R.id.selectApplication);
 
         //Setting text from string values for both english and russian languages
        // tv.setText(getResources().getString(R.string.choose_station) + " " + route_name);
 
-        tv.setText("Select Application from" + bankName);
+        //tv.setText("Select Application from" + bankName);
 
         new GetApplications().execute();
     }
@@ -121,13 +116,11 @@ public class SelectApplication extends AppCompatActivity {
 
                     in.close();
                     String answer = sb.toString();
-
                     Log.e(TAG, "Response from url: " + answer);
 
                     if (answer != null) {
                         try {
                             JSONObject jsonObj = new JSONObject(answer);
-
                             // Getting JSON Array node
                             JSONArray contacts = jsonObj.getJSONArray("manageRecord");
 
@@ -136,6 +129,7 @@ public class SelectApplication extends AppCompatActivity {
                                 JSONObject c = contacts.getJSONObject(i);
                                 String serviceName = c.getString("serviceName");
                                 String description = c.getString("description");
+
                                 String serviceID = c.getString("serviceID");
 
                                 // tmp hash map for single contact
@@ -149,17 +143,8 @@ public class SelectApplication extends AppCompatActivity {
                                 // adding contact to contact list
                                 applicationList.add(record);
                             }
-                        } catch (final JSONException e) {
+                        } catch (Exception e) {
                             Log.e(TAG, "Json parsing error: " + e.getMessage());
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(),
-                                            "Json parsing error: " + e.getMessage(),
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
-
                         }
 
                     } else {
@@ -198,7 +183,6 @@ public class SelectApplication extends AppCompatActivity {
                     HashMap<String,String> map =(HashMap<String,String>)lv.getItemAtPosition(position);
                     intent_serviceID = map.get("serviceID");
                     intent_serviceName = map.get("serviceName");
-                    map.get("description").replaceAll("\\n","\n");
                     intent_description = map.get("description");
                     //Toast.makeText(getApplicationContext(), selectedBank, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SelectApplication.this, ApplicationDescription.class);
@@ -208,6 +192,7 @@ public class SelectApplication extends AppCompatActivity {
                     intent.putExtra("intent_psw", password);
                     intent.putExtra("bankID", bankID);
                     intent.putExtra("intent_username", username);
+
                     startActivity(intent);
                 }
             });

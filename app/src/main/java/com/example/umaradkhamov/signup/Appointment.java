@@ -18,6 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -53,11 +57,12 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
     private String TAG = Appointment.class.getSimpleName();
     //Intents
     private String bankID, serviceID, serviceName, appointmentID, username, password, qrcode;
-    private String branchID, date, time, interval_id;
+    private String branchID, bankName, branchName, staffName, date, time, interval_id, time_interval;
     private Button submitAppointment;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private Void getBranches;
     private StringBuffer sb;
+    ArrayList<HashMap<String, String>> applicationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
         bankID = getIntent().getStringExtra("bankID");
         username = getIntent().getStringExtra("intent_username");
         password = getIntent().getStringExtra("intent_psw");
+        applicationList = new ArrayList<>();
 
 
 
@@ -155,7 +161,6 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                 int selectedBranchID = parent.getSelectedItemPosition();
                 branchID = branchIDs.get(selectedBranchID);
                 if(date != null) {
-                    Toast.makeText(this, "Date 1: " + date, Toast.LENGTH_SHORT).show();
                     new GetTimesForBranch().execute();
                 }
                 break;
@@ -163,7 +168,6 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                 int selectedTimeID = parent.getSelectedItemPosition();
                 //time = parent.getSelectedItem().toString();
                 interval_id = intervals.get(selectedTimeID);
-                Toast.makeText(this, "Interval:  " + interval_id, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -395,7 +399,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
-    private class MakeAppointment extends AsyncTask<String, Void, String> {
+    private class MakeAppointment extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -404,7 +408,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
 
 
         @Override
-        protected String doInBackground(String... arg0) {
+        protected Void doInBackground(Void... arg0) {
 
             try {
 
@@ -450,7 +454,53 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                     }
 
                     in.close();
-                    return sb.toString();
+                    //return sb.toString();
+                    String answer = sb.toString();
+                    Log.e(TAG, "Response from url: " + answer);
+
+
+                    if (answer != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(answer);
+
+                            // Getting JSON Array node
+                            JSONArray contacts = jsonObj.getJSONArray("manageRecord");
+
+                            // looping through All Contacts
+                            for (int i = 0; i < contacts.length(); i++) {
+                                JSONObject c = contacts.getJSONObject(i);
+                                appointmentID = c.getString("appointmentID");
+                                bankName = c.getString("bankName");
+                                branchName = c.getString("branchName");
+                                staffName = c.getString("staffName");
+                                time_interval = c.getString("time_interval");
+
+                            }
+                        } catch (final JSONException e) {
+                            Log.e(TAG, "Json parsing error: " + e.getMessage());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Json parsing error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                        }
+
+                    } else {
+                        Log.e(TAG, "Couldn't get json from server.");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),
+                                        "Couldn't get json from server. Check LogCat for possible errors!",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
 
                 }
                 else {
@@ -464,28 +514,22 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            if(sb.toString().equals("true")){
+        protected void onPostExecute(Void result) {
                 Toast.makeText(getApplicationContext(), "Appointment has been made", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Appointment.this, DetailsOfAppointment.class);
                 intent.putExtra("qrcode", qrcode);
                 intent.putExtra("appointmentID", appointmentID);
-                intent.putExtra("bankID", bankID);
-                intent.putExtra("serviceID", serviceID);
+                intent.putExtra("appointment_date", date);
+                intent.putExtra("bankName", bankName);
+                intent.putExtra("branchName", branchName);
+                intent.putExtra("serviceName", serviceName);
+                intent.putExtra("staffName", staffName);
+                intent.putExtra("time_interval", time_interval);
                 intent.putExtra("serviceName", serviceName);
                 intent.putExtra("intent_psw", password);
                 intent.putExtra("intent_username", username);
                 startActivity(intent);
                 finish();
-            }else if(sb.toString().equals("false")){
-                Toast.makeText(getApplicationContext(), "Could not create Appointment", Toast.LENGTH_SHORT).show();
-            }else{
-                Log.e(TAG, "error: " + sb.toString());
-                Toast.makeText(getApplicationContext(), "Sorry, something went wrong",
-                        Toast.LENGTH_SHORT).show();
-            }
         }
     }
-
-
 }

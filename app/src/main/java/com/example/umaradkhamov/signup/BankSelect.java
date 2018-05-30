@@ -57,9 +57,6 @@ public class BankSelect extends AppCompatActivity {
         password = getIntent().getStringExtra("intent_psw");
         username = getIntent().getStringExtra("intent_username");
 
-
-
-
         applicationList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.lv_bank);
         //tv = (TextView) findViewById(R.id.selectBankID);
@@ -89,6 +86,7 @@ public class BankSelect extends AppCompatActivity {
                     case R.id.pending:
                         Intent intent = new Intent(BankSelect.this, AppointmentList.class);
                         intent.putExtra("intent_username", username);
+                        intent.putExtra("intent_psw", password);
                         startActivity(intent);
                         drawerLayout.closeDrawers();
                         break;

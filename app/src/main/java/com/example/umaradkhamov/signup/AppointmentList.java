@@ -52,6 +52,7 @@ public class AppointmentList extends AppCompatActivity {
        // tv = (TextView) findViewById(R.id.selectedAppointment);
         username = getIntent().getStringExtra("intent_username");
         password = getIntent().getStringExtra("intent_psw");
+
         new AppointmentList.GetAppointments().execute();
     }
 
@@ -119,6 +120,8 @@ public class AppointmentList extends AppCompatActivity {
                                 JSONObject c = contacts.getJSONObject(i);
                                 String appointmentID = c.getString("appointmentID");
                                 String bankName = c.getString("bankName");
+                                String branchName = c.getString("branchName");
+                                String staffName = c.getString("staffName");
                                 String serviceName = c.getString("serviceName");
                                 String appointment_date = c.getString("appointment_date");
                                 String time_interval = c.getString("time_interval");
@@ -129,6 +132,8 @@ public class AppointmentList extends AppCompatActivity {
                                 // adding each child node to HashMap key => value
                                 record.put("appointmentID", appointmentID);
                                 record.put("bankName", bankName);
+                                record.put("branchName", branchName);
+                                record.put("staffName", staffName);
                                 record.put("serviceName",  serviceName);
                                 record.put("appointment_date", appointment_date);
                                 record.put("time_interval", time_interval);
@@ -185,12 +190,17 @@ public class AppointmentList extends AppCompatActivity {
                     HashMap<String,String> map =(HashMap<String,String>)lv.getItemAtPosition(position);
                     String appointmentID = map.get("appointmentID");
                     String bankName = map.get("bankName");
+                    String branchName = map.get("branchName");
                     String serviceName = map.get("serviceName");
+                    String staffName = map.get("staffName");
                     String appointment_date = map.get("appointment_date");
                     String time_interval = map.get("time_interval");
                     Intent intent = new Intent(AppointmentList.this, DetailsOfAppointment.class);
                     intent.putExtra("appointmentID", appointmentID);
                     intent.putExtra("bankName", bankName);
+                    intent.putExtra("branchName", branchName);
+                    intent.putExtra("serviceName", serviceName);
+                    intent.putExtra("staffName", staffName);
                     intent.putExtra("appointment_date", appointment_date);
                     intent.putExtra("time_interval", time_interval);
                     intent.putExtra("intent_username", username);
@@ -200,6 +210,15 @@ public class AppointmentList extends AppCompatActivity {
             });
         }
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return true;
     }
 }
 

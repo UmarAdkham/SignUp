@@ -63,8 +63,10 @@
             android:label="Appointment Details"
             android:parentActivityName=".Appointment" />
 
-        <activity android:name=".DetailsOfAppointment" />
-        <activity android:name=".AppointmentList"></activity>
+        <activity android:name=".DetailsOfAppointment"/>
+
+        <activity android:name=".AppointmentList"
+            android:parentActivityName=".BankSelect"></activity>
     </application>
 
 </manifest>

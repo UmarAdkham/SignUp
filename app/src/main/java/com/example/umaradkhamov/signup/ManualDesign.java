@@ -208,12 +208,23 @@ public class ManualDesign extends AppCompatActivity {
                 tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
                 tv.setTypeface(Typeface.DEFAULT_BOLD);
                 //#TextView
+
+                //LinearLayout for RadioButtons
+                LinearLayout rbLayout = new LinearLayout(this);
+                rbLayout.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams rbParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                rbParams.setMargins(90, 0, 90, 0);
+                rbLayout.setLayoutParams(rbParams);
+                //#LinearLayout for RadioButtons
+
                 //Radio button try
                 rb = new RadioButton[5];
                 rgEdu = new RadioGroup(this);
-                rgEdu.setOrientation(RadioGroup.HORIZONTAL);
+                rgEdu.setOrientation(RadioGroup.VERTICAL);
                 for(int k=1; k<=4; k++){
                     rb[k] = new RadioButton(this);
+                    rb[k].setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                    rb[k].setTextSize(18);
                     rgEdu.addView(rb[k]); //the RadioButtons are added to the radioGroup instead of the layout
                     if (k==1){
                         int newID = k + 123;
@@ -241,7 +252,8 @@ public class ManualDesign extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                 myLayout.addView(tv, etTvParams);
-                myLayout.addView(rgEdu,radioParams);
+                rbLayout.addView(rgEdu,radioParams);
+                myLayout.addView(rbLayout, rbParams);
             }else if(fieldName.equalsIgnoreCase("Marital Status")){
                 //TextView
                 TextView tv=new TextView(this);
@@ -253,12 +265,22 @@ public class ManualDesign extends AppCompatActivity {
                 tv.setTypeface(Typeface.DEFAULT_BOLD);
                 //#TextView
 
+                //LinearLayout for RadioButtons
+                LinearLayout rbLayout = new LinearLayout(this);
+                rbLayout.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams rbParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                rbParams.setMargins(90, 0, 90, 0);
+                rbLayout.setLayoutParams(rbParams);
+                //#LinearLayout for RadioButtons
+
                 //Radio button try
                 rb = new RadioButton[3];
                 rgMarital = new RadioGroup(this);
-                rgMarital.setOrientation(RadioGroup.HORIZONTAL);
+                rgMarital.setOrientation(RadioGroup.VERTICAL);
                 for(int k=1; k<=2; k++){
                     rb[k] = new RadioButton(this);
+                    rb[k].setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                    rb[k].setTextSize(18);
                     rgMarital.addView(rb[k]); //the RadioButtons are added to the radioGroup instead of the layout
                     if (k==1){
                         int newID = k + 223;
@@ -278,7 +300,8 @@ public class ManualDesign extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
                 myLayout.addView(tv, etTvParams);
-                myLayout.addView(rgMarital,radioParams);
+                rbLayout.addView(rgMarital,radioParams);
+                myLayout.addView(rbLayout, rbParams);
             }else if(fieldName.equalsIgnoreCase("Gender")){
                 //TextView
                 TextView tv=new TextView(this);
@@ -291,7 +314,7 @@ public class ManualDesign extends AppCompatActivity {
                 //#TextView
 
                 //Radio button try
-                rb = new RadioButton[5];
+               /* rb = new RadioButton[5];
                 rgGender = new RadioGroup(this);
                 rgGender.setOrientation(RadioGroup.HORIZONTAL);
                 for(int k=1; k<=2; k++){
@@ -311,9 +334,19 @@ public class ManualDesign extends AppCompatActivity {
                 LinearLayout.LayoutParams radioParams =
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                                LinearLayout.LayoutParams.WRAP_CONTENT);*/
+
+                //Gender Value
+                TextView genderTV=new TextView(this);
+                genderTV.setId(i);
+                genderTV.setText(gender);
+                LinearLayout.LayoutParams genderParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                genderParams.setMargins(90, 0, 0, 0);
+                genderTV.setTextSize(18);
+                genderTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
+                //myLayout.addView(dobBtn, dobParams);
                 myLayout.addView(tv, etTvParams);
-                myLayout.addView(rgGender,radioParams);
+                myLayout.addView(genderTV, genderParams);
             }else{
                 //TextView
                 TextView tv=new TextView(this);

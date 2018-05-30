@@ -5,7 +5,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include "DBconfig.php";
 
 $bankID = $_POST['bankID'];
-//$bankID = '3';
+//$bankID = '1';
 
 $result = $con->query("SELECT * from service WHERE bankID = '$bankID'");
 
@@ -19,7 +19,7 @@ while($row = $result->fetch_array()){
 		$outp .= ",";
 	}
 
-
+	
 	$outp .= '{"serviceName":"'.$row["serviceName"].'",';
 	$outp .= '"description":"'.$row["description"].'",';
 	$outp .= '"serviceID":"'.$row["serviceID"].'"}';
@@ -27,6 +27,8 @@ while($row = $result->fetch_array()){
 
 	$aa = 1;
 }
+
+
 
 
 $con->close();

@@ -3,7 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/pending"
-            android:title="Appointments"
+            android:title="Pending appointments"
             />
         <item
             android:id="@+id/approved"

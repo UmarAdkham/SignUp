@@ -1,12 +1,9 @@
 package com.example.umaradkhamov.signup;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +30,7 @@ import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class AppointmentList extends AppCompatActivity {
+public class HistoryAppointments extends AppCompatActivity {
 
     TextView tv;
     private String TAG = BankSelect.class.getSimpleName();
@@ -45,20 +42,20 @@ public class AppointmentList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.appointment_content);
-        setTitle("Pending appointments");
+        setContentView(R.layout.history_appointments);
+        setTitle("History");
 
         applicationList = new ArrayList<>();
-        lv = (ListView) findViewById(R.id.lv_appointment);
-       // tv = (TextView) findViewById(R.id.selectedAppointment);
+        lv = (ListView) findViewById(R.id.lv_history);
+        // tv = (TextView) findViewById(R.id.selectedAppointment);
         username = getIntent().getStringExtra("intent_username");
         password = getIntent().getStringExtra("intent_psw");
 
-        new AppointmentList.GetAppointments().execute();
+        new HistoryAppointments.GetHistory().execute();
     }
 
 
-    private class GetAppointments extends AsyncTask<Void, Void, Void> {
+    private class GetHistory extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -69,7 +66,7 @@ public class AppointmentList extends AppCompatActivity {
 
             try {
 
-                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/getAppointments.php"); // here is your URL path
+                URL url = new URL("http://" +  IPContainer.IP + "/jrlu/getHistory.php"); // here is your URL path
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
@@ -180,9 +177,9 @@ public class AppointmentList extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            adapter = new SimpleAdapter(AppointmentList.this, applicationList,
-                    R.layout.appointment_select, new String[]{"bankName", "serviceName", "appointment_date", "time_interval"},
-                    new int[]{R.id.bankName, R.id.serviceName, R.id.appointment_date, R.id.time_interval});
+            adapter = new SimpleAdapter(HistoryAppointments.this, applicationList,
+                    R.layout.history_select, new String[]{"bankName", "serviceName", "appointment_date", "time_interval"},
+                    new int[]{R.id.hs_bankName, R.id.hs_serviceName, R.id.hs_appointment_date, R.id.hs_time_interval});
             lv.setAdapter(adapter);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -196,7 +193,7 @@ public class AppointmentList extends AppCompatActivity {
                     String staffName = map.get("staffName");
                     String appointment_date = map.get("appointment_date");
                     String time_interval = map.get("time_interval");
-                    Intent intent = new Intent(AppointmentList.this, DetailsOfAppointment.class);
+                    Intent intent = new Intent(HistoryAppointments.this, DetailsOfAppointment.class);
                     intent.putExtra("appointmentID", appointmentID);
                     intent.putExtra("bankName", bankName);
                     intent.putExtra("branchName", branchName);
@@ -222,4 +219,3 @@ public class AppointmentList extends AppCompatActivity {
         return true;
     }
 }
-

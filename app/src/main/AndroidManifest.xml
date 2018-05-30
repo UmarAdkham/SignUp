@@ -46,26 +46,18 @@
             android:name=".ApplicationDescription"
             android:label="Application Description"
             android:parentActivityName=".SelectApplication" />
-
-        <activity android:name=".ManualDesign"
-            android:parentActivityName=".ApplicationDescription">
-        </activity>
         <activity
-            android:name=".Fields"
-            android:label="Apply"
-            android:parentActivityName=".ApplicationDescription" />
+            android:name=".ManualDesign"
+            android:parentActivityName=".ApplicationDescription"></activity>
         <activity
             android:name=".Appointment"
             android:label="Appointment"
             android:parentActivityName=".ManualDesign" />
+        <activity android:name=".DetailsOfAppointment" />
         <activity
-            android:name=".SeeYou"
-            android:label="Appointment Details"
-            android:parentActivityName=".Appointment" />
-
-        <activity android:name=".DetailsOfAppointment"/>
-
-        <activity android:name=".AppointmentList"
+            android:name=".AppointmentList"
+            android:parentActivityName=".BankSelect" />
+        <activity android:name=".HistoryAppointments"
             android:parentActivityName=".BankSelect"></activity>
     </application>
 

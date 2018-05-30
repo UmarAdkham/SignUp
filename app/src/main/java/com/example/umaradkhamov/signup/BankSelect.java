@@ -91,8 +91,10 @@ public class BankSelect extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.approved:
-                        Intent intent_time = new Intent(BankSelect.this, SeeYou.class);
-                        startActivity(intent_time);
+                        Intent intent_history = new Intent(BankSelect.this, HistoryAppointments.class);
+                        intent_history.putExtra("intent_username", username);
+                        intent_history.putExtra("intent_psw", password);
+                        startActivity(intent_history);
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.logout:

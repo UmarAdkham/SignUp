@@ -41,7 +41,7 @@
             android:theme="@style/AppTheme.RemoveActionBar" />
         <activity
             android:name=".SelectApplication"
-            android:parentActivityName=".LogInCustomer" />
+            android:parentActivityName=".BankSelect" />
         <activity
             android:name=".ApplicationDescription"
             android:label="Application Description"
@@ -57,7 +57,7 @@
         <activity
             android:name=".Appointment"
             android:label="Appointment"
-            android:parentActivityName=".Fields" />
+            android:parentActivityName=".ManualDesign" />
         <activity
             android:name=".SeeYou"
             android:label="Appointment Details"

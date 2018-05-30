@@ -44,7 +44,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
 
     private static final String TAG_APPOINTMENT = "Appointment";
     private Button appDateBtn;
-    private TextView appDateTV;
+    private TextView appDateTV, serviceNameTV;
     Spinner spinnerFrom, spinnerTime;
     List<String> categories, branchIDs, times, intervals;
     ArrayAdapter dataAdapter, timeAdapter;
@@ -63,12 +63,13 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appointment_activity);
+        setTitle("Make appointment");
 
         //Getting intents
 
         appointmentID = getIntent().getStringExtra("appointmentID");
         qrcode = getIntent().getStringExtra("qrcode");
-        serviceName = getIntent().getStringExtra("intent_serviceName");
+        serviceName = getIntent().getStringExtra("serviceName");
         serviceID = getIntent().getStringExtra("serviceID");
         bankID = getIntent().getStringExtra("bankID");
         username = getIntent().getStringExtra("intent_username");
@@ -78,7 +79,8 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
 
         appDateBtn = (Button) findViewById(R.id.appDateBtn);
         appDateTV = (TextView) findViewById(R.id.appDateTV);
-
+        serviceNameTV= (TextView) findViewById(R.id.app_serviceName);
+        serviceNameTV.setText(serviceName);
 
         appDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

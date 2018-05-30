@@ -552,6 +552,7 @@ public class ManualDesign extends AppCompatActivity {
                 intent.putExtra("intent_psw", password);
                 intent.putExtra("intent_username", username);
                 startActivity(intent);
+                finish();
 
             }else if(sb.toString().contains("f")) {
                 Toast.makeText(getApplicationContext(), "Sorry, something went wrong", Toast.LENGTH_SHORT).show();

@@ -87,17 +87,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="45dp"
                 android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:text="Date of Birth"
-                android:textColor="@color/colorWhite"/>
+                />
 
             <TextView
                 android:id="@+id/dobTextSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="dd/mm/yyyy"
                 android:textColor="@color/colorBlack"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:text="dd/mm/yyyy"
+                />
 
         </LinearLayout>
 

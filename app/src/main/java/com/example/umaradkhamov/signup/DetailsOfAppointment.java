@@ -183,7 +183,7 @@ public class DetailsOfAppointment extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (sb.toString().equals("true")) {
-                Toast.makeText(getApplicationContext(), "You gained additional points for being on time. Thanks!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "You gained additional points for being on time. Thanks!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(DetailsOfAppointment.this, BankSelect.class);
                 intent.putExtra("intent_username", username);
                 intent.putExtra("intent_psw", password);

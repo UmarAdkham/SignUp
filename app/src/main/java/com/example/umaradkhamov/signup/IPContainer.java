@@ -20,7 +20,7 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 public class IPContainer extends AppCompatActivity {
-    static String IP = "192.168.0.173";
+    static String IP = "10.125.193.47";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +28,6 @@ public class IPContainer extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 }
-
-
-
-
-
-
-
 
 
 
